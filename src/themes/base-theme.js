@@ -1,5 +1,3 @@
-// src/themes/base-theme.js
-
 export const baseTheme = {
 	// Colors
 	'color-primary': '#0066cc',

@@ -1,4 +1,3 @@
-// src/components/button/ds-button.js
 import { colors, typography, spacing, animation } from '../../tokens';
 
 class DSButton extends HTMLElement {

@@ -1,4 +1,3 @@
-// src/components/card/ds-card.js
 import { colors, spacing, elevation } from '../../tokens';
 
 class DSCard extends HTMLElement {

@@ -1,4 +1,3 @@
-// Border radius tokens
 export const borderRadius = {
 	none: 'var(--ds-border-radius-none, 0)',
 	sm: 'var(--ds-border-radius-sm, 0.125rem)',

@@ -1,4 +1,3 @@
-// src/components/tabs/ds-tabs.js
 import { colors, typography, spacing } from '../../tokens';
 
 class DSTabs extends HTMLElement {

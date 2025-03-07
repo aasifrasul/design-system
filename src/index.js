@@ -1,4 +1,3 @@
-// src/index.js
 import { applyTheme, toggleTheme } from './themes/index.js';
 import './components/button/DSButton';
 import './components/input/DSInput';
@@ -29,23 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
 function createGlobalStylesheet() {
 	const style = document.createElement('style');
 	style.textContent = `
-    :root {
-      /* These are fallback values if JavaScript fails to load */
-      --ds-color-primary: #0066cc;
-      --ds-color-primary-light: #4d94ff;
-      --ds-color-primary-dark: #004c99;
-      /* ... other default variables ... */
-    }
-    
-    /* Global styles */
-    body {
-      font-family: var(--ds-font-family);
-      color: var(--ds-color-gray-900);
-      background-color: var(--ds-color-white);
-      line-height: var(--ds-line-height-normal);
-      transition: background-color 0.3s, color 0.3s;
-    }
-  `;
+        :root {
+        /* These are fallback values if JavaScript fails to load */
+        --ds-color-primary: #0066cc;
+        --ds-color-primary-light: #4d94ff;
+        --ds-color-primary-dark: #004c99;
+        /* ... other default variables ... */
+        }
+        
+        /* Global styles */
+        body {
+        font-family: var(--ds-font-family);
+        color: var(--ds-color-gray-900);
+        background-color: var(--ds-color-white);
+        line-height: var(--ds-line-height-normal);
+        transition: background-color 0.3s, color 0.3s;
+        }
+    `;
 	document.head.appendChild(style);
 }
 

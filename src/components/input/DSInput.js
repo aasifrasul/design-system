@@ -1,4 +1,3 @@
-// src/components/input/ds-input.js
 import { colors, typography, spacing } from '../../tokens';
 
 class DSInput extends HTMLElement {

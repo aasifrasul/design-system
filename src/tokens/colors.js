@@ -1,5 +1,3 @@
-// src/tokens/index.js
-
 // Color tokens
 export const colors = {
 	// Primary colors

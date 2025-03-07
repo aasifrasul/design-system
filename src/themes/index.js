@@ -1,5 +1,4 @@
 
-// src/themes/index.js
 import { baseTheme } from './base-theme';
 import { darkTheme } from './dark-theme';
 
