@@ -3,6 +3,7 @@ import './components/button/DSButton';
 import './components/input/DSInput';
 import './components/card/DSCard';
 import './components/tabs/DSTabs';
+import './components/ModalPopup'
 
 // Apply default theme on initialization
 document.addEventListener('DOMContentLoaded', () => {

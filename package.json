@@ -6,6 +6,7 @@
 		"rollup-plugin-terser": "^7.0.2"
 	},
 	"scripts": {
-		"build": "rollup -c"
+		"build": "rollup -c",
+		"serve": "python3 server.py"
 	}
 }

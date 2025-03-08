@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Modal Popup Example</title>
+		<script type="module" src="./dist/design-system.js"></script>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 20px;
+			}
+
+			button {
+				padding: 10px 15px;
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 16px;
+			}
+
+			button:hover {
+				background-color: #45a049;
+			}
+
+			/* Custom styling for the modal (optional) */
+			modal-popup {
+				--modal-content-bg: #f9f9f9;
+				--modal-border-radius: 12px;
+				--header-color: #2c3e50;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Modal Popup Web Component Demo</h1>
+
+		<button id="openModalBtn">Open Modal</button>
+
+		<!-- Define the modal popup -->
+		<modal-popup id="myModal" title="Welcome to My Modal">
+			<p>This is a customizable modal popup implemented as a Web Component.</p>
+			<p>You can close it by:</p>
+			<ul>
+				<li>Clicking the X button</li>
+				<li>Clicking outside the modal</li>
+				<li>Pressing the ESC key</li>
+			</ul>
+
+			<!-- Footer buttons using the named slot -->
+			<div slot="footer">
+				<button id="cancelBtn" style="background-color: #f44336">Cancel</button>
+				<button id="confirmBtn" style="background-color: #2196f3">Confirm</button>
+			</div>
+		</modal-popup>
+
+		<script>
+			// Get elements
+			const openBtn = document.getElementById('openModalBtn');
+			const modal = document.getElementById('myModal');
+			const cancelBtn = document.getElementById('cancelBtn');
+			const confirmBtn = document.getElementById('confirmBtn');
+
+			// Open modal when button is clicked
+			openBtn.addEventListener('click', () => {
+				modal.setAttribute('open', '');
+			});
+
+			// Handle footer button clicks
+			cancelBtn.addEventListener('click', () => {
+				modal.removeAttribute('open');
+				console.log('Action cancelled');
+			});
+
+			confirmBtn.addEventListener('click', () => {
+				modal.removeAttribute('open');
+				console.log('Action confirmed');
+			});
+
+			// Listen for modal events
+			modal.addEventListener('modal-open', () => {
+				console.log('Modal was opened');
+			});
+
+			modal.addEventListener('modal-close', () => {
+				console.log('Modal was closed');
+			});
+		</script>
+	</body>
+</html>

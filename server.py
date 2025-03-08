@@ -1,11 +1,42 @@
 #!/usr/bin/env python3
 import argparse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+import os
 
 class CORSRequestHandler(SimpleHTTPRequestHandler):
+    routes = {
+        '/ModalPopup': 'ModalPopup.html',
+        '/': 'index.html',
+        # Add more routes here...
+    }
+
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         super().end_headers()
+
+    def do_GET(self):
+        if self.path in self.routes:
+            self.serve_specific_html(self.routes[self.path])
+        else:
+            super().do_GET()
+
+    def serve_specific_html(self, filename):
+        try:
+            with open(filename, 'rb') as f:
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+                self.wfile.write(f.read())
+        except FileNotFoundError:
+            self.send_response(404)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'File not found')
+        except Exception as e:
+            self.send_response(500)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(f'Internal server error: {e}'.encode())
 
 def main():
     parser = argparse.ArgumentParser(description='Start a simple HTTP server with CORS enabled.')
