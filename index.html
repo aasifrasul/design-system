@@ -2,12 +2,62 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Design System Demo</title>
 		<script type="module" src="./dist/design-system.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const emailInput = document.querySelector('#emailInput');
+
+				// Listen for the custom event with the correct event data structure
+				emailInput.addEventListener('ds-input', (event) => {
+					console.log('Input changed:', event.detail.value);
+				});
+
+				// Optional: For debugging purposes
+				console.log('Email input element found:', emailInput);
+
+				// You can also try adding a regular input event listener to verify
+				// that the input element itself works
+				emailInput.addEventListener('input', (event) => {
+					console.log('Native input event:', event.target.value);
+				});
+			});
+		</script>
 	</head>
 	<body>
-		<ds-button id="theme-toggle">Change Theme</ds-button>
+		<div class="theme-container">
+			<ds-button id="theme-toggle">Themed Button</ds-button>
+		</div>
+
+		<ds-button variant="primary">Primary</ds-button>
 		<ds-button variant="secondary">Secondary</ds-button>
-		<ds-button disabled>Disabled</ds-button>
+		<ds-button variant="tertiary">Tertiary</ds-button>
+		<ds-button variant="danger">Danger</ds-button>
+		<ds-button variant="warning">Warning</ds-button>
+		<ds-button variant="success">Success</ds-button>
+		<ds-button variant="info">Info</ds-button>
+		<ds-button variant="light">Light</ds-button>
+
+		<ds-tabs aria-label="My tabs" aria-labelledby="tab1" aria-controls="panel1">
+			<ds-tab-panel id="panel1">Panel 1</ds-tab-panel>
+			<ds-tab-panel id="panel2">Panel 2</ds-tab-panel>
+			<ds-tab-panel id="panel3">Panel 3</ds-tab-panel>
+		</ds-tabs>
+		<ds-alert variant="success">Success</ds-alert>
+		<ds-alert variant="warning">Warning</ds-alert>
+		<ds-alert variant="error">Error</ds-alert>
+		<ds-card>
+			<h3>Card Title</h3>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis luctus
+				nunc. Nullam nec nisi nec nunc ultricies tincidunt. Nullam nec nisi nec nunc
+				ultricies tincidunt.
+			</p>
+		</ds-card>
+
+		<ds-input type="text" placeholder="Text input" />
+		<ds-input type="email" placeholder="Email input" id="emailInput" label="emailInpt" />
+
 	</body>
 </html>
