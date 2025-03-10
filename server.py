@@ -6,6 +6,7 @@ import os
 class CORSRequestHandler(SimpleHTTPRequestHandler):
     routes = {
         '/ModalPopup': 'ModalPopup.html',
+        '/CustomButton': 'CustomButton.html',
         '/': 'index.html',
         # Add more routes here...
     }

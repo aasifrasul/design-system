@@ -1,4 +1,3 @@
-// Spacing tokens
 export const spacing = {
 	xs: 'var(--ds-spacing-xs, 0.25rem)',
 	sm: 'var(--ds-spacing-sm, 0.5rem)',
