@@ -4,13 +4,23 @@ class DSButton extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
+
+		// Store for event handlers defined by attributes
+		this._eventHandlers = {};
 	}
 
 	static get observedAttributes() {
-		return ['variant', 'size', 'disabled', 'full-width'];
+		return ['variant', 'size', 'disabled', 'full-width', 'onclick', 'onhover', 'onfocus'];
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
+		// For event handlers (attributes starting with "on")
+		if (name.startsWith('on') && oldValue !== newValue) {
+			this._eventHandlers[name] = newValue;
+			return;
+		}
+
+		// For other attributes
 		if (oldValue !== newValue) {
 			this.render();
 		}
@@ -28,22 +38,63 @@ class DSButton extends HTMLElement {
 	addEventListeners() {
 		const button = this.shadowRoot.querySelector('button');
 		button.addEventListener('click', this.handleClick.bind(this));
+
+		// Add event listeners for other events we want to support
+		button.addEventListener('mouseover', this.handleEvent.bind(this, 'onhover'));
+		button.addEventListener('focus', this.handleEvent.bind(this, 'onfocus'));
 	}
 
 	removeEventListeners() {
 		const button = this.shadowRoot.querySelector('button');
 		button.removeEventListener('click', this.handleClick.bind(this));
+		button.removeEventListener('mouseover', this.handleEvent.bind(this, 'onhover'));
+		button.removeEventListener('focus', this.handleEvent.bind(this, 'onfocus'));
+	}
+
+	// Generic event handler for declarative events
+	handleEvent(eventName, e) {
+		if (!this.hasAttribute('disabled') && this._eventHandlers[eventName]) {
+			// Execute the handler code
+			try {
+				const handler = new Function('event', this._eventHandlers[eventName]);
+				handler.call(this, e);
+			} catch (error) {
+				console.error(`Error executing ${eventName} handler:`, error);
+			}
+		}
 	}
 
 	handleClick(e) {
-		if (!this.hasAttribute('disabled')) {
-			this.dispatchEvent(
-				new CustomEvent('ds-click', {
-					bubbles: true,
-					composed: true,
-				}),
-			);
+		if (this.hasAttribute('disabled')) {
+			return;
 		}
+
+		// Execute the declarative onclick handler if present
+		if (this._eventHandlers.onclick) {
+			try {
+				const handler = new Function(
+					'event',
+					`return ${this._eventHandlers.onclick}`
+				)();
+                if (typeof handler !== 'function') {
+                    throw new Error(`Invalid onclick handler: ${this._eventHandlers.onclick}`);
+                }
+				handler.call(this, e);
+			} catch (error) {
+				console.error('Error executing onclick handler:', error);
+			}
+		}
+
+		// Dispatch the custom event (for backwards compatibility)
+		this.dispatchEvent(
+			new CustomEvent('ds-click', {
+				bubbles: true,
+				composed: true,
+				detail: {
+					originalEvent: e,
+				},
+			})
+		);
 	}
 
 	render() {
@@ -56,33 +107,35 @@ class DSButton extends HTMLElement {
             <style>
                 :host {
                 display: ${fullWidth ? 'block' : 'inline-block'};
-                --button-background: var(--ds-button-${variant}-background, ${colors[variant]});
+                --button-background: var(--ds-button-${variant}-background, ${
+			colors[variant]
+		});
                 --button-color: var(--ds-button-${variant}-color, white);
                 --button-border: var(--ds-button-${variant}-border, none);
                 --button-hover-background: var(--ds-button-${variant}-hover-background, ${
-                        colors[variant + 'Dark']
-                    });
+			colors[variant + 'Dark']
+		});
                 --button-active-background: var(--ds-button-${variant}-active-background, ${
-                        colors[variant + 'Dark']
-                    });
+			colors[variant + 'Dark']
+		});
                 --button-focus-ring: var(--ds-button-${variant}-focus-ring, ${
-                        colors[variant + 'Light']
-                    }40);
+			colors[variant + 'Light']
+		}40);
                 
                 /* Size properties can be customized per theme */
                 --button-padding-x: var(--ds-button-${size}-padding-x, ${
-                        size === 'small' ? spacing.sm : size === 'large' ? spacing.lg : spacing.md
-                    });
+			size === 'small' ? spacing.sm : size === 'large' ? spacing.lg : spacing.md
+		});
                 --button-padding-y: var(--ds-button-${size}-padding-y, ${
-                        size === 'small' ? spacing.xs : size === 'large' ? spacing.md : spacing.sm
-                    });
+			size === 'small' ? spacing.xs : size === 'large' ? spacing.md : spacing.sm
+		});
                 --button-font-size: var(--ds-button-${size}-font-size, ${
-                        size === 'small'
-                            ? typography.fontSize.sm
-                            : size === 'large'
-                                ? typography.fontSize.lg
-                                : typography.fontSize.base
-                    });
+			size === 'small'
+				? typography.fontSize.sm
+				: size === 'large'
+				? typography.fontSize.lg
+				: typography.fontSize.base
+		});
                 --button-border-radius: var(--ds-button-border-radius, 4px);
                 }
                 
@@ -139,7 +192,7 @@ class DSButton extends HTMLElement {
                 }
             </style>
             
-            <button ?disabled="${disabled}">
+            <button ?disabled="${disabled}" part="button">
                 <slot></slot>
             </button>
         `;

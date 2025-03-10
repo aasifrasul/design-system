@@ -56,8 +56,22 @@
 			</p>
 		</ds-card>
 
-		<ds-input type="text" placeholder="Text input" />
-		<ds-input type="email" placeholder="Email input" id="emailInput" label="emailInpt" />
+		<!-- Default spinner -->
+		<ds-spinner></ds-spinner>
 
+		<!-- Customized spinner -->
+		<ds-spinner
+			size="60"
+			color="#e74c3c"
+			thickness="6"
+			duration="0.8"
+			label="Processing..."
+		>
+		</ds-spinner>
+
+		<!-- Spinner without label -->
+		<ds-spinner size="30" color="#2ecc71" label=""> </ds-spinner>
+
+		<ds-input type="email" placeholder="Email input" id="emailInput" />
 	</body>
 </html>

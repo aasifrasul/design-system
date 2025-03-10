@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Design System Button Demo</title>
+		<script type="module" src="./dist/design-system.js"></script>
+		<style>
+			body {
+				font-family: sans-serif;
+				padding: 2rem;
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.button-row {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.demo-section {
+				margin-bottom: 2rem;
+			}
+
+			h2 {
+				margin-bottom: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Design System Button Component</h1>
+
+		<div class="demo-section">
+			<h2>Variants</h2>
+			<div class="button-row">
+				<ds-button variant="primary" onclick="console.log('Primary button clicked')">
+					Primary Button
+				</ds-button>
+
+				<ds-button variant="secondary" onclick="() => alert('Secondary button clicked')">
+					Secondary Button
+				</ds-button>
+
+				<ds-button
+					variant="tertiary"
+					onclick="document.querySelector('#log').textContent += '\nTertiary clicked'"
+				>
+					Tertiary Button
+				</ds-button>
+			</div>
+		</div>
+
+		<div class="demo-section">
+			<h2>Sizes</h2>
+			<div class="button-row">
+				<ds-button size="small" onhover="console.log('Small button hover')">
+					Small
+				</ds-button>
+
+				<ds-button size="medium" onfocus="console.log('Medium button focus')">
+					Medium
+				</ds-button>
+
+				<ds-button size="large" onclick="handleClick(event)"> Large </ds-button>
+			</div>
+		</div>
+
+		<div class="demo-section">
+			<h2>States</h2>
+			<div class="button-row">
+				<ds-button disabled> Disabled Button </ds-button>
+
+				<ds-button full-width> Full Width Button </ds-button>
+			</div>
+		</div>
+
+		<div class="demo-section">
+			<h2>Event Log</h2>
+			<pre id="log" style="background: #f5f5f5; padding: 1rem; min-height: 100px"></pre>
+		</div>
+
+		<script>
+			// Traditional event listener for backward compatibility
+			document.querySelectorAll('ds-button').forEach((btn) => {
+				btn.addEventListener('ds-click', (e) => {
+					document.querySelector(
+						'#log'
+					).textContent += `\nButton clicked: ${e.target.textContent.trim()}`;
+				});
+			});
+
+			// Example of a global function that can be referenced in onclick attributes
+			function handleClick(event) {
+				document.querySelector(
+					'#log'
+				).textContent += `\nLarge button clicked at: ${new Date().toLocaleTimeString()}`;
+			}
+		</script>
+	</body>
+</html>

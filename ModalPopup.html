@@ -35,13 +35,21 @@
 		</style>
 	</head>
 	<body>
-		<h1>Modal Popup Web Component Demo</h1>
+		<h1>Declarative Modal Popup Web Component Demo</h1>
 
-		<button id="openModalBtn">Open Modal</button>
+		<ds-button onclick="() => document.getElementById('myModal').setAttribute('open', '')">
+			Open Modal
+		</ds-button>
 
-		<!-- Define the modal popup -->
-		<modal-popup id="myModal" title="Welcome to My Modal">
-			<p>This is a customizable modal popup implemented as a Web Component.</p>
+		<!-- Define the modal popup with declarative event handlers -->
+		<modal-popup
+			id="myModal"
+			title="Welcome to My Modal"
+			onopen="() => console.log('Modal opened via attribute handler')"
+			onclose="() => console.log('Modal closed via attribute handler')"
+			onconfirm="() => alert('Action confirmed!')"
+		>
+			<p>This is a customizable modal popup with declarative event handling.</p>
 			<p>You can close it by:</p>
 			<ul>
 				<li>Clicking the X button</li>
@@ -49,43 +57,30 @@
 				<li>Pressing the ESC key</li>
 			</ul>
 
-			<!-- Footer buttons using the named slot -->
+			<!-- Footer buttons using data-action for declarative handling -->
 			<div slot="footer">
-				<button id="cancelBtn" style="background-color: #f44336">Cancel</button>
-				<button id="confirmBtn" style="background-color: #2196f3">Confirm</button>
+				<ds-button data-action="cancel" style="background-color: #f44336">Cancel</ds-button>
+				<ds-button data-action="confirm" style="background-color: #2196f3">
+					Confirm
+				</ds-button>
 			</div>
 		</modal-popup>
 
+		<hr />
+		<h2>Optional: JavaScript Access</h2>
+		<p>You can still access the modal programmatically if needed:</p>
+
 		<script>
-			// Get elements
-			const openBtn = document.getElementById('openModalBtn');
+			// Example of programmatic access (optional)
 			const modal = document.getElementById('myModal');
-			const cancelBtn = document.getElementById('cancelBtn');
-			const confirmBtn = document.getElementById('confirmBtn');
 
-			// Open modal when button is clicked
-			openBtn.addEventListener('click', () => {
-				modal.setAttribute('open', '');
-			});
-
-			// Handle footer button clicks
-			cancelBtn.addEventListener('click', () => {
-				modal.removeAttribute('open');
-				console.log('Action cancelled');
-			});
-
-			confirmBtn.addEventListener('click', () => {
-				modal.removeAttribute('open');
-				console.log('Action confirmed');
-			});
-
-			// Listen for modal events
+			// Listen for modal events if needed
 			modal.addEventListener('modal-open', () => {
-				console.log('Modal was opened');
+				console.log('Modal was opened (event listener)');
 			});
 
 			modal.addEventListener('modal-close', () => {
-				console.log('Modal was closed');
+				console.log('Modal was closed (event listener)');
 			});
 		</script>
 	</body>
