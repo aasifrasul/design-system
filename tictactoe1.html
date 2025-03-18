@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title></title>
+		<style type="text/css">
+			.container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+
+			.grid-container {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				width: 336px;
+			}
+
+			.grid-item {
+				width: 100px;
+				height: 100px;
+				border: 1px solid black;
+				text-align: center;
+				align-content: center;
+				margin: 5px;
+				font-size: 50px;
+			}
+
+			.winning-cell {
+				background-color: coral;
+			}
+		</style>
+		<script type="text/javascript">
+			const players = {
+				1: 'X',
+				2: 'O',
+			};
+
+			let currentPlayer = 1;
+
+			let board = new Array(9).fill('');
+
+			const winning_combos = [
+				[0, 1, 2],
+				[3, 4, 5],
+				[6, 7, 8],
+				[0, 3, 6],
+				[1, 4, 7],
+				[2, 5, 8],
+				[0, 4, 8],
+				[2, 4, 6],
+			];
+
+			document.addEventListener('DOMContentLoaded', () => {
+				console.log('loaded');
+				//initializeBoard()
+				setUpListeners();
+			});
+
+			function setUpListeners() {
+				document.addEventListener('click', handleClick);
+			}
+
+			function handleClick(e) {
+				if (!e.target.classList.contains('grid-item')) return;
+
+				const index = e.target.dataset.index;
+				document.querySelector(`[data-index="${index}"]`).textContent =
+					players[currentPlayer];
+				board[index] = players[currentPlayer];
+				const isAWinningMove = checkForWinningMove();
+				if (isAWinningMove) return;
+				const isADraw = checkForDraw();
+				if (isADraw) return;
+				toggleCurrentPlayer();
+				updateHeading(`Player ${currentPlayer}'s turn`);
+			}
+
+			function checkForWinningMove() {
+				const combo = winning_combos.find((combo) => {
+					return combo.every((item) => {
+						return board[item] === players[currentPlayer];
+					});
+				});
+
+				const isAWinningMove = Boolean(combo?.length);
+
+				if (isAWinningMove) {
+					updateWinningCells(combo);
+					updateHeading(`Player ${currentPlayer} wins!!`);
+				}
+
+				return isAWinningMove;
+			}
+
+			function updateWinningCells(combo) {
+				combo.forEach((item) => {
+					document
+						.querySelector(`[data-index="${item}"]`)
+						.classList.add('winning-cell');
+				});
+			}
+
+			function checkForDraw() {
+				const isADraw = !board.some((item) => !item);
+				if (isADraw) updateHeading(`It's a draw`);
+
+				return isADraw;
+			}
+
+			function toggleCurrentPlayer() {
+				currentPlayer = currentPlayer === 1 ? 2 : 1;
+			}
+
+			function updateHeading(text) {
+				document.querySelector('.heading').textContent = text;
+			}
+
+			function reset() {
+				board = new Array(9).fill('');
+				currentPlayer = 1;
+				updateHeading(`Player ${currentPlayer} wins!!`);
+				document.querySelectorAll('.grid-item').forEach((item) => {
+					item.textContent = '';
+					item.classList.remove('winning-cell');
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<h2 class="heading">Player 1's turn</h2>
+			<div class="grid-container">
+				<div class="grid-item" data-index="0"></div>
+				<div class="grid-item" data-index="1"></div>
+				<div class="grid-item" data-index="2"></div>
+				<div class="grid-item" data-index="3"></div>
+				<div class="grid-item" data-index="4"></div>
+				<div class="grid-item" data-index="5"></div>
+				<div class="grid-item" data-index="6"></div>
+				<div class="grid-item" data-index="7"></div>
+				<div class="grid-item" data-index="8"></div>
+			</div>
+			<div><button class="reset" onclick="reset()">Reset</button></div>
+		</div>
+	</body>
+</html>

@@ -5,7 +5,7 @@ class DSInput extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		
+
 		this._handleFocus = this._handleFocus.bind(this);
 		this._handleBlur = this._handleBlur.bind(this);
 		// Store the bound event handler for proper removal later
