@@ -207,9 +207,9 @@ class ModalPopup extends HTMLElement {
 			// This is similar to how inline event handlers work
 			try {
 				const handler = new Function('event', `return ${handlerCode}`)();
-                if (typeof handler !== 'function') {
-                    throw new Error(`${handlerName} handler must be a function`);
-                }
+				if (typeof handler !== 'function') {
+					throw new Error(`${handlerName} handler must be a function`);
+				}
 				handler.call(this, event);
 			} catch (error) {
 				console.error(`Error executing ${handlerName} handler:`, error);
@@ -252,7 +252,7 @@ class ModalPopup extends HTMLElement {
 			new CustomEvent('modal-open', {
 				bubbles: true,
 				composed: true,
-			})
+			}),
 		);
 	}
 
@@ -269,7 +269,7 @@ class ModalPopup extends HTMLElement {
 			new CustomEvent('modal-close', {
 				bubbles: true,
 				composed: true,
-			})
+			}),
 		);
 	}
 

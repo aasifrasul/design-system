@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -39,7 +39,10 @@
 					Primary Button
 				</ds-button>
 
-				<ds-button variant="secondary" onclick="() => alert('Secondary button clicked')">
+				<ds-button
+					variant="secondary"
+					onclick="() => alert('Secondary button clicked')"
+				>
 					Secondary Button
 				</ds-button>
 
@@ -85,17 +88,15 @@
 			// Traditional event listener for backward compatibility
 			document.querySelectorAll('ds-button').forEach((btn) => {
 				btn.addEventListener('ds-click', (e) => {
-					document.querySelector(
-						'#log'
-					).textContent += `\nButton clicked: ${e.target.textContent.trim()}`;
+					document.querySelector('#log').textContent +=
+						`\nButton clicked: ${e.target.textContent.trim()}`;
 				});
 			});
 
 			// Example of a global function that can be referenced in onclick attributes
 			function handleClick(event) {
-				document.querySelector(
-					'#log'
-				).textContent += `\nLarge button clicked at: ${new Date().toLocaleTimeString()}`;
+				document.querySelector('#log').textContent +=
+					`\nLarge button clicked at: ${new Date().toLocaleTimeString()}`;
 			}
 		</script>
 	</body>

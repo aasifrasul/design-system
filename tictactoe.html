@@ -1,0 +1,208 @@
+<html>
+	<style>
+		.main-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			width: 306px; /* Width for 3 boxes (100px each) + 6px for borders */
+			justify-content: center;
+		}
+
+		.box {
+			width: 100px;
+			height: 100px;
+			border: 1px solid black;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 4em;
+			cursor: pointer;
+			color: coral;
+			background-color: #a4c9e2;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+		.box:hover {
+			background-color: #2980b9;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.winner {
+			font-size: 2em;
+			margin-bottom: 20px;
+		}
+
+		.winner-box {
+			background-color: forestgreen;
+			transition: background-color 0.5s linear 0s;
+		}
+
+		.disbale {
+			pointer-events: none;
+		}
+
+		.reset {
+			margin-top: 20px;
+			padding: 10px 15px;
+			background-color: #4caf50;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		.heading {
+			font-size: 2em;
+			margin-bottom: 20px;
+			color: #333;
+			transition: color 0.3s ease-in-out;
+		}
+
+		.heading:hover {
+			color: #683333;
+		}
+	</style>
+	<script>
+		const player1 = 'X';
+		const player2 = 'O';
+		let currentPlayer = player1;
+		let gameBoard = ['', '', '', '', '', '', '', '', ''];
+		const winning_combos = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
+
+		document.addEventListener('DOMContentLoaded', function () {
+			console.log('loaded');
+			handleOnLoad();
+		});
+
+		function updateHeading() {
+			document.querySelector('.heading').innerHTML = `Player ${
+				currentPlayer === player1 ? 1 : 2
+			}'s Turn`;
+		}
+
+		function handleOnLoad() {
+			updateHeading();
+			setUpBoard();
+			setUpListeners();
+		}
+
+		function setUpListeners() {
+			document.querySelector('.container').addEventListener('click', function (e) {
+				if (e.target.classList.contains('box')) updateBoard(e.target.classList[1]);
+			});
+		}
+
+		function setUpBoard() {
+			const container = document.querySelector('.container');
+			const fragment = document.createDocumentFragment();
+			container.innerHTML = '';
+
+			gameBoard.forEach((value, index) => {
+				const button = document.createElement('button');
+				button.classList.add(`box`);
+				button.classList.add(`${index}`);
+				button.setAttribute('aria-label', value);
+				button.textContent = value;
+				fragment.appendChild(button);
+			});
+
+			container.appendChild(fragment);
+		}
+
+		function updateBoard(index) {
+			if (gameBoard[index]) return;
+			updateBox(index);
+			const isWin = checkForWinning();
+			checkForDraw(isWin);
+			switchPlayer();
+			updateHeading();
+		}
+
+		function updateBox(index) {
+			const box = document.querySelector(`.box.${CSS.escape(index)}`);
+			if (!box || box.textContent) return;
+			gameBoard[Number(index)] = currentPlayer;
+			box.textContent = currentPlayer;
+			box.classList.add('disbale');
+		}
+
+		switchPlayer = () => {
+			currentPlayer = currentPlayer === player1 ? player2 : player1;
+		};
+
+		function checkForDraw(isWin) {
+			if (isWin) return;
+			if (gameBoard.every((value) => value)) {
+				showHideWinner(true, "It's a Draw!");
+			}
+		}
+
+		function checkForWinning() {
+			const combo = winning_combos.find((combo) =>
+				combo.every((index) => gameBoard[index] === currentPlayer),
+			);
+			if (combo) handleWin(combo);
+			return combo;
+		}
+
+		function handleWin(combo) {
+			combo.forEach((index) =>
+				document
+					.querySelector(`.box.${CSS.escape(index)}`)
+					.classList.add('winner-box'),
+			);
+			document.querySelectorAll('.box').forEach((box) => {
+				box.classList.add('disbale');
+			});
+			showHideWinner(true, `Player ${currentPlayer === player1 ? 1 : 2} Wins!`);
+		}
+
+		function showHideWinner(show = false, message = '') {
+			const method = show ? 'remove' : 'add';
+			document.querySelector('.winner').classList[method]('hidden');
+			document.querySelector('.winner').innerHTML = message;
+		}
+
+		function reset() {
+			gameBoard = ['', '', '', '', '', '', '', '', ''];
+			currentPlayer = player1;
+			document.querySelectorAll('.box').forEach((box) => {
+				box.textContent = '';
+				box.classList.remove('winner-box');
+				box.classList.remove('disbale');
+			});
+			showHideWinner();
+			updateHeading();
+		}
+	</script>
+	<body>
+		<div class="main-container">
+			<h3 class="heading"></h3>
+
+			<div class="hidden winner"></div>
+			<div class="container"></div>
+			<div>&nbsp;</div>
+			<button class="reset" onclick="reset();">Reset</button>
+		</div>
+	</body>
+</html>
