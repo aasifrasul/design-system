@@ -5,46 +5,43 @@
 		<style>
 			.container {
 				width: 500px;
-				margin-bottom: 20px;
 			}
 
-			.progress-container {
+			.progressbar-container {
 				height: 30px;
-				border: 1px solid #ccc;
-				margin-bottom: 20px;
+				border: 1px solid;
+				margin-bottom: 10px;
 			}
 
-			.progressbar {
-				height: 30px;
-				background-color: green;
+			.progress-bar {
+				height: 100%;
 				width: 0%;
+				background-color: green;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="container">
-			<div class="progress-container">
-				<div class="progressbar" duration="2000"></div>
+			<div class="progressbar-container">
+				<div class="progress-bar" duration="2000"></div>
 			</div>
-			<div class="progress-container">
-				<div class="progressbar" duration="3000"></div>
+			<div class="progressbar-container">
+				<div class="progress-bar" duration="3000"></div>
 			</div>
-			<div class="progress-container">
-				<div class="progressbar" duration="1500"></div>
+			<div class="progressbar-container">
+				<div class="progress-bar" duration="1500"></div>
 			</div>
 		</div>
 		<script>
-			function startProgress(progressBar) {
-				const duration = progressBar.getAttribute('duration');
-				const interval = Number(duration)/100;
+			async function startProgressBar(progressBar, duration) {
+				const interval = duration / 100;
 				let counter = 0;
 
 				return new Promise((resolve, reject) => {
-					const intervalID = setInterval(() => {
+					const intervalId = setInterval(() => {
 						counter++;
-
 						if (counter >= 100) {
-							clearInterval(intervalID);
+							clearInterval(intervalId);
 							resolve();
 						}
 
@@ -54,10 +51,12 @@
 			}
 
 			async function start() {
-				const progressBars = document.querySelectorAll('.progressbar');
+				const progressBars = document.querySelectorAll('.progress-bar');
 
 				for (let i = 0; i < progressBars.length; i++) {
-					await startProgress(progressBars[i]);
+					progressBar = progressBars[i];
+					const duration = Number(progressBar.getAttribute('duration'));
+					await startProgressBar(progressBar, duration);
 				}
 			}
 

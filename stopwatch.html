@@ -38,9 +38,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<div class="stopwatch">
-				Secs: 0.00
-			</div>
+			<div class="stopwatch">Secs: 0.00</div>
 			<div class="buttons">
 				<button class="start" data-index="1">Start</button>
 				<button class="pause" data-index="2">Pause</button>
@@ -59,7 +57,9 @@
 				if (intervalId) return;
 				intervalId = setInterval(() => {
 					count += 0.1;
-					document.querySelector('.stopwatch').innerHTML = `Secs: ${count.toFixed(2)}`;
+					document.querySelector('.stopwatch').innerHTML = `Secs: ${count.toFixed(
+						2,
+					)}`;
 				}, 100);
 				setButtonDisabled(1);
 				setButtonDisabled(2, false);
@@ -104,12 +104,12 @@
 			}
 
 			document.addEventListener('click', (e) => {
-				switch(Number(e.target.dataset.index)) {
+				switch (Number(e.target.dataset.index)) {
 					case 1:
 						start();
 						break;
 					case 2:
-						pause()
+						pause();
 						break;
 					case 3:
 						resume();
@@ -120,7 +120,6 @@
 					default:
 				}
 			});
-
 		</script>
 	</body>
 </html>
