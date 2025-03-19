@@ -34,7 +34,7 @@ class SpinnerComponent extends HTMLElement {
 
 	// Get attributes from HTML
 	loadAttributes() {
-		this.observedAttributes.forEach((attr) => {
+		SpinnerComponent.observedAttributes.forEach((attr) => {
 			if (this.hasAttribute(attr)) {
 				this[attr] = this.getAttribute(attr);
 			}

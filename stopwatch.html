@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Stopwatch</title>
+		<style>
+			button {
+				cursor: pointer;
+				height: 30px;
+				margin: 5px;
+				background-color: lightgreen;
+				font-weight: bold;
+			}
+
+			.container {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			.stopwatch {
+				font-size: 20px;
+				font-weight: bold;
+				font-family: sans-serif;
+				text-align: center;
+			}
+
+			.buttons {
+				flex-direction: row;
+			}
+
+			.disable {
+				pointer-events: none;
+				background-color: #ee7777;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="stopwatch">
+				Secs: 0.00
+			</div>
+			<div class="buttons">
+				<button class="start" data-index="1">Start</button>
+				<button class="pause" data-index="2">Pause</button>
+				<button class="resume" data-index="3">Resume</button>
+				<button class="reset" data-index="4">Reset</button>
+			</div>
+		</div>
+		<script>
+			let count = 0;
+			let intervalId = null;
+			setButtonDisabled(2);
+			setButtonDisabled(3);
+			setButtonDisabled(4);
+
+			function start() {
+				if (intervalId) return;
+				intervalId = setInterval(() => {
+					count += 0.1;
+					document.querySelector('.stopwatch').innerHTML = `Secs: ${count.toFixed(2)}`;
+				}, 100);
+				setButtonDisabled(1);
+				setButtonDisabled(2, false);
+				setButtonDisabled(3, false);
+				setButtonDisabled(4, false);
+			}
+
+			function pause() {
+				clearInterval(intervalId);
+				intervalId = null;
+				setButtonDisabled(1);
+				setButtonDisabled(2);
+				setButtonDisabled(3, false);
+				setButtonDisabled(4, false);
+			}
+
+			function resume() {
+				start();
+				setButtonDisabled(1);
+				setButtonDisabled(2, false);
+				setButtonDisabled(3);
+				setButtonDisabled(4, false);
+			}
+
+			function reset() {
+				count = 0;
+				pause();
+				document.querySelector('.stopwatch').innerHTML = `Secs: 0.00`;
+				setButtonDisabled(1, false);
+				setButtonDisabled(2);
+				setButtonDisabled(3);
+				setButtonDisabled(4);
+			}
+
+			function setButtonDisabled(id, isDisabled = true) {
+				const button = document.querySelector(`[data-index="${id}"]`);
+				if (isDisabled) {
+					button.classList.add('disable');
+				} else {
+					button.classList.remove('disable');
+				}
+			}
+
+			document.addEventListener('click', (e) => {
+				switch(Number(e.target.dataset.index)) {
+					case 1:
+						start();
+						break;
+					case 2:
+						pause()
+						break;
+					case 3:
+						resume();
+						break;
+					case 4:
+						reset();
+						break;
+					default:
+				}
+			});
+
+		</script>
+	</body>
+</html>
