@@ -40,18 +40,18 @@
 		<div class="container">
 			<div class="stopwatch">Secs: 0.00</div>
 			<div class="buttons">
-				<button class="start" data-index="1">Start</button>
-				<button class="pause" data-index="2">Pause</button>
-				<button class="resume" data-index="3">Resume</button>
-				<button class="reset" data-index="4">Reset</button>
+				<button class="start" index="1">Start</button>
+				<button class="pause" index="2">Pause</button>
+				<button class="resume" index="3">Resume</button>
+				<button class="reset" index="4">Reset</button>
 			</div>
 		</div>
 		<script>
 			let count = 0;
 			let intervalId = null;
-			setButtonDisabled(2);
-			setButtonDisabled(3);
-			setButtonDisabled(4);
+			disableButton(2);
+			disableButton(3);
+			disableButton(4);
 
 			function start() {
 				if (intervalId) return;
@@ -61,41 +61,42 @@
 						2,
 					)}`;
 				}, 100);
-				setButtonDisabled(1);
-				setButtonDisabled(2, false);
-				setButtonDisabled(3, false);
-				setButtonDisabled(4, false);
+				disableButton(1);
+				disableButton(2, false);
+				disableButton(3, false);
+				disableButton(4, false);
 			}
 
 			function pause() {
 				clearInterval(intervalId);
 				intervalId = null;
-				setButtonDisabled(1);
-				setButtonDisabled(2);
-				setButtonDisabled(3, false);
-				setButtonDisabled(4, false);
+				disableButton(1);
+				disableButton(2);
+				disableButton(3, false);
+				disableButton(4, false);
 			}
 
 			function resume() {
 				start();
-				setButtonDisabled(1);
-				setButtonDisabled(2, false);
-				setButtonDisabled(3);
-				setButtonDisabled(4, false);
+				disableButton(1);
+				disableButton(2, false);
+				disableButton(3);
+				disableButton(4, false);
 			}
 
 			function reset() {
 				count = 0;
 				pause();
 				document.querySelector('.stopwatch').innerHTML = `Secs: 0.00`;
-				setButtonDisabled(1, false);
-				setButtonDisabled(2);
-				setButtonDisabled(3);
-				setButtonDisabled(4);
+				disableButton(1, false);
+				disableButton(2);
+				disableButton(3);
+				disableButton(4);
 			}
 
-			function setButtonDisabled(id, isDisabled = true) {
-				const button = document.querySelector(`[data-index="${id}"]`);
+			function disableButton(index, isDisabled = true) {
+				const button = document.querySelector(`[index="${index}"]`);
+
 				if (isDisabled) {
 					button.classList.add('disable');
 				} else {
@@ -104,7 +105,7 @@
 			}
 
 			document.addEventListener('click', (e) => {
-				switch (Number(e.target.dataset.index)) {
+				switch (Number(e.target.getAttribute('index'))) {
 					case 1:
 						start();
 						break;
