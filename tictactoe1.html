@@ -28,6 +28,13 @@
 				align-content: center;
 				margin: 5px;
 				font-size: 50px;
+				cursor: pointer;
+			}
+
+			.filled {
+				pointer-events: none;
+				background-color: lightgrey;
+				transition: background-color .5s ease;
 			}
 
 			.winning-cell {
@@ -67,9 +74,10 @@
 
 			function handleClick(e) {
 				if (!e.target.classList.contains('grid-item')) return;
+				e.target.classList.add('filled');
 
-				const index = e.target.dataset.index;
-				document.querySelector(`[data-index="${index}"]`).textContent =
+				const index = e.target.getAttribute('index');
+				document.querySelector(`[index="${index}"]`).textContent =
 					players[currentPlayer];
 				board[index] = players[currentPlayer];
 				const isAWinningMove = checkForWinningMove();
@@ -100,7 +108,7 @@
 			function updateWinningCells(combo) {
 				combo.forEach((item) => {
 					document
-						.querySelector(`[data-index="${item}"]`)
+						.querySelector(`[index="${item}"]`)
 						.classList.add('winning-cell');
 				});
 			}
@@ -127,6 +135,7 @@
 				document.querySelectorAll('.grid-item').forEach((item) => {
 					item.textContent = '';
 					item.classList.remove('winning-cell');
+					item.classList.remove('filled');
 				});
 			}
 		</script>
@@ -135,15 +144,15 @@
 		<div class="container">
 			<h2 class="heading">Player 1's turn</h2>
 			<div class="grid-container">
-				<div class="grid-item" data-index="0"></div>
-				<div class="grid-item" data-index="1"></div>
-				<div class="grid-item" data-index="2"></div>
-				<div class="grid-item" data-index="3"></div>
-				<div class="grid-item" data-index="4"></div>
-				<div class="grid-item" data-index="5"></div>
-				<div class="grid-item" data-index="6"></div>
-				<div class="grid-item" data-index="7"></div>
-				<div class="grid-item" data-index="8"></div>
+				<div class="grid-item" index="0"></div>
+				<div class="grid-item" index="1"></div>
+				<div class="grid-item" index="2"></div>
+				<div class="grid-item" index="3"></div>
+				<div class="grid-item" index="4"></div>
+				<div class="grid-item" index="5"></div>
+				<div class="grid-item" index="6"></div>
+				<div class="grid-item" index="7"></div>
+				<div class="grid-item" index="8"></div>
 			</div>
 			<div><button class="reset" onclick="reset()">Reset</button></div>
 		</div>
