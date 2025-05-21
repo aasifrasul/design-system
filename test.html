@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Dynamic Search</title>
+		<style>
+			.container {
+				width: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="searchContainer">
+				<input type="text" name="search" value="">
+			</div>
+			<div class="list-container">
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		const items = [
+			"Top 10 hiking trails near you - explore scenic views and nature walks.",
+			"Easy recipes for weeknight dinners - quick and delicious meals.",
+			"What is the capital of Australia?",
+			"Latest news headlines - breaking stories from around the world.",
+			"Best books of 2024 - critically acclaimed novels and non-fiction.",
+			"Learn a new language online - free and paid resources available.",
+			"Symptoms of the common cold - when to see a doctor.",
+			"DIY home improvement projects - tips and tutorials.",
+			"Find local businesses - restaurants, shops, and services nearby.",
+			"Understanding cryptocurrency - a beginner's guide.",
+			"Travel deals and vacation packages - plan your next getaway.",
+			"History of the internet - key milestones and innovations.",
+			"Benefits of regular exercise - improve your health and well-being.",
+			"Funny cat videos compilation - guaranteed to make you laugh.",
+			"How to write a compelling resume - tips for job seekers.",
+			"The science behind climate change - facts and evidence.",
+			"Popular podcasts to listen to - covering various topics.",
+			"Best practices for gardening - grow your own fruits and vegetables.",
+			"Understanding quantum physics - exploring the subatomic world.",
+			"Virtual museum tours - explore art and history from home."
+		];
+		let filteredItems = [];
+		const searchParams = new URLSearchParams(window.location.search);
+		const inputSearch = document.querySelector(".searchContainer > input");
+
+		const searchText = inputSearch?.value || searchParams?.get('searchText');
+		
+		if (searchText?.length > 0 && inputSearch) {
+			inputSearch.value = searchText;
+		}
+
+		inputSearch?.addEventListener('input', handleChange);
+
+		function handleChange(e)  {
+			const text = e.target.value;
+			filterSearch(text);
+			displayItems();
+			updateURLSearchParams(text);
+		}
+
+		function updateURLSearchParams(text) {
+			if (text.toLowerCase() !== searchText.toLowerCase()) {
+				searchParams.set('searchText', text.toLowerCase());
+				window.history.pushState(
+					{ searchParams: searchParams.toString() }, 
+					'', 
+					`${window.location.pathname}?${searchParams.toString()}`
+				);
+			}
+		}
+
+		function filterSearch(text) {
+			const cleanedText = text.toLowerCase();
+			filteredItems = items.filter((item) => item.toLowerCase().indexOf(cleanedText) >= 0);
+		}
+
+		function displayItems() {
+			const listContainer = document.querySelector('.list-container');
+			listContainer.innerHTML = '';
+
+			filteredItems?.forEach((item) => {
+				listContainer.innerHTML += (`<div>${item}</div>`);
+			})
+		}
+
+		filterSearch(searchText);
+		displayItems();
+	</script>
+</html>

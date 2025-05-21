@@ -5,6 +5,7 @@ import './components/card/DSCard';
 import './components/tabs/DSTabs';
 import './components/ModalPopup';
 import './components/Spinner';
+import './components/Icon';
 
 // Apply default theme on initialization
 document.addEventListener('DOMContentLoaded', () => {
