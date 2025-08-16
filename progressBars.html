@@ -7,54 +7,86 @@
 				width: 300px;
 				border: 1px solid #ccc;
 				margin-bottom: 20px;
+				position: relative;
 			}
 
 			.progress-bar {
-				width: 0%;
+				width: inherit;
 				height: 20px;
-				background-color: #4caf50;
+				background: #f0f0f0;
+				border: 1px solid black;
+				margin-bottom: 20px;
+			}
+
+			.progress-fill {
+				height: 100%;
+				background: linear-gradient(45deg, #4caf50, #45a049);
+				width: 0%;
 			}
 		</style>
 	</head>
 	<body>
-		<div id="progressBars">
-			<div class="progress-container">
-				<div class="progress-bar" id="progressBar1"></div>
+		<div class="container">
+			<div
+				class="progress-bar"
+				role="progressbar"
+				aria-valuenow="70"
+				aria-valuemin="0"
+				aria-valuemax="100"
+			>
+				<div class="progress-fill"></div>
 			</div>
-			<div class="progress-container">
-				<div class="progress-bar" id="progressBar2"></div>
+			<div
+				class="progress-bar"
+				role="progressbar"
+				aria-valuenow="70"
+				aria-valuemin="0"
+				aria-valuemax="100"
+			>
+				<div class="progress-fill"></div>
 			</div>
-			<div class="progress-container">
-				<div class="progress-bar" id="progressBar3"></div>
+			<div
+				class="progress-bar"
+				role="progressbar"
+				aria-valuenow="70"
+				aria-valuemin="0"
+				aria-valuemax="100"
+			>
+				<div class="progress-fill"></div>
 			</div>
 		</div>
 
 		<script>
-			function animateProgressBar(barId, duration) {
-				const progressBar = document.getElementById(barId);
-				const delay = duration / 100;
-				let i = 0;
+			const durations = [1000, 2000, 1500];
+			const progressBars = document.querySelectorAll('.progress-fill');
+			const container = document.querySelectorAll('.progress-container');
 
+			function animateProgressBar(progressBar, duration) {
 				return new Promise((resolve) => {
-					const animation = setInterval(() => {
-						i++;
-						if (i >= 100) {
-							clearInterval(animation);
-							progressBar.style.width = '100%';
+					// Add an event listener that resolves the promise when the transition ends
+					progressBar.addEventListener(
+						'transitionend',
+						() => {
 							resolve();
-						} else {
-							progressBar.style.width = i + '%';
-						}
-					}, delay);
+						},
+						{ once: true },
+					); // The { once: true } option ensures the listener is automatically removed.
+
+					// Set the transition duration
+					progressBar.style.transitionDuration = `${duration}ms`;
+
+					// Start the animation
+					// We use a small setTimeout to ensure the transition listener is registered first
+					setTimeout(() => {
+						progressBar.style.width = '100%';
+					}, 10);
 				});
 			}
 
 			async function runProgressBars() {
-				const durations = [2222, 3000, 1500]; // Durations in milliseconds
-
-				await animateProgressBar('progressBar1', durations[0]);
-				await animateProgressBar('progressBar2', durations[1]);
-				await animateProgressBar('progressBar3', durations[2]);
+				for (let i = 0; i < progressBars.length; i++) {
+					await animateProgressBar(progressBars[i], durations[i]);
+				}
 			}
 
 			runProgressBars();

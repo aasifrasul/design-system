@@ -255,39 +255,7 @@ class m extends HTMLElement {
 			e = this.getAttribute('size') || 'medium',
 			n = this.hasAttribute('disabled'),
 			o = this.hasAttribute('full-width');
-		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                display: ${
-			o ? 'block' : 'inline-block'
-		};\n                --button-background: var(--ds-button-${t}-background, ${
-			r[t]
-		});\n                --button-color: var(--ds-button-${t}-color, white);\n                --button-border: var(--ds-button-${t}-border, none);\n                --button-hover-background: var(--ds-button-${t}-hover-background, ${
-			r[t + 'Dark']
-		});\n                --button-active-background: var(--ds-button-${t}-active-background, ${
-			r[t + 'Dark']
-		});\n                --button-focus-ring: var(--ds-button-${t}-focus-ring, ${
-			r[t + 'Light']
-		}40);\n                \n                /* Size properties can be customized per theme */\n                --button-padding-x: var(--ds-button-${e}-padding-x, ${
-			'small' === e ? s : 'large' === e ? l : i
-		});\n                --button-padding-y: var(--ds-button-${e}-padding-y, ${
-			'small' === e ? a : 'large' === e ? i : s
-		});\n                --button-font-size: var(--ds-button-${e}-font-size, ${
-			'small' === e ? c.sm : 'large' === e ? c.lg : c.base
-		});\n                --button-border-radius: var(--ds-button-border-radius, 4px);\n                }\n                \n                button {\n                font-family: ${d};\n                font-size: var(--button-font-size);\n                font-weight: ${
-			b.medium
-		};\n                color: var(--button-color);\n                background-color: var(--button-background);\n                border: var(--button-border);\n                border-radius: var(--button-border-radius);\n                padding: var(--button-padding-y) var(--button-padding-x);\n                cursor: ${
-			n ? 'not-allowed' : 'pointer'
-		};\n                opacity: ${
-			n ? '0.6' : '1'
-		};\n                transition: background-color ${v} ${
-			p.easeInOut
-		},\n                            transform ${u} ${
-			p.easeOut
-		},\n                            box-shadow ${u} ${
-			p.easeOut
-		};\n                width: ${
-			o ? '100%' : 'auto'
-		};\n                position: relative;\n                overflow: hidden;\n                }\n                \n                button:hover:not(:disabled) {\n                background-color: var(--button-hover-background);\n                }\n                \n                button:active:not(:disabled) {\n                background-color: var(--button-active-background);\n                transform: translateY(1px);\n                }\n                \n                button:focus {\n                outline: none;\n                }\n                \n                button:focus-visible {\n                box-shadow: 0 0 0 3px var(--button-focus-ring);\n                }\n                \n                /* Ripple effect */\n                .ripple {\n                position: absolute;\n                border-radius: 50%;\n                transform: scale(0);\n                animation: ripple 600ms ${
-			p.easeOut
-		};\n                background-color: rgba(255, 255, 255, 0.3);\n                }\n                \n                @keyframes ripple {\n                to {\n                    transform: scale(4);\n                    opacity: 0;\n                }\n                }\n            </style>\n            \n            <button ?disabled="${n}" part="button">\n                <slot></slot>\n            </button>\n        `;
+		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                display: ${o ? 'block' : 'inline-block'};\n                --button-background: var(--ds-button-${t}-background, ${r[t]});\n                --button-color: var(--ds-button-${t}-color, white);\n                --button-border: var(--ds-button-${t}-border, none);\n                --button-hover-background: var(--ds-button-${t}-hover-background, ${r[t + 'Dark']});\n                --button-active-background: var(--ds-button-${t}-active-background, ${r[t + 'Dark']});\n                --button-focus-ring: var(--ds-button-${t}-focus-ring, ${r[t + 'Light']}40);\n                \n                /* Size properties can be customized per theme */\n                --button-padding-x: var(--ds-button-${e}-padding-x, ${'small' === e ? s : 'large' === e ? l : i});\n                --button-padding-y: var(--ds-button-${e}-padding-y, ${'small' === e ? a : 'large' === e ? i : s});\n                --button-font-size: var(--ds-button-${e}-font-size, ${'small' === e ? c.sm : 'large' === e ? c.lg : c.base});\n                --button-border-radius: var(--ds-button-border-radius, 4px);\n                }\n                \n                button {\n                font-family: ${d};\n                font-size: var(--button-font-size);\n                font-weight: ${b.medium};\n                color: var(--button-color);\n                background-color: var(--button-background);\n                border: var(--button-border);\n                border-radius: var(--button-border-radius);\n                padding: var(--button-padding-y) var(--button-padding-x);\n                cursor: ${n ? 'not-allowed' : 'pointer'};\n                opacity: ${n ? '0.6' : '1'};\n                transition: background-color ${v} ${p.easeInOut},\n                            transform ${u} ${p.easeOut},\n                            box-shadow ${u} ${p.easeOut};\n                width: ${o ? '100%' : 'auto'};\n                position: relative;\n                overflow: hidden;\n                }\n                \n                button:hover:not(:disabled) {\n                background-color: var(--button-hover-background);\n                }\n                \n                button:active:not(:disabled) {\n                background-color: var(--button-active-background);\n                transform: translateY(1px);\n                }\n                \n                button:focus {\n                outline: none;\n                }\n                \n                button:focus-visible {\n                box-shadow: 0 0 0 3px var(--button-focus-ring);\n                }\n                \n                /* Ripple effect */\n                .ripple {\n                position: absolute;\n                border-radius: 50%;\n                transform: scale(0);\n                animation: ripple 600ms ${p.easeOut};\n                background-color: rgba(255, 255, 255, 0.3);\n                }\n                \n                @keyframes ripple {\n                to {\n                    transform: scale(4);\n                    opacity: 0;\n                }\n                }\n            </style>\n            \n            <button ?disabled="${n}" part="button">\n                <slot></slot>\n            </button>\n        `;
 		const h = this.shadowRoot.querySelector('button');
 		n ||
 			h.addEventListener('mousedown', function (t) {
@@ -387,43 +355,7 @@ class g extends HTMLElement {
 			l = this.getAttribute('label') || '';
 		this.hasAttribute('focused');
 		const h = this.getAttribute('type') || 'text';
-		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                    display: block;\n                    --input-border-color: var(--ds-input-border-color, ${
-			r.gray300
-		});\n                    --input-border-color-hover: var(--ds-input-border-color-hover, ${
-			r.gray400
-		});\n                    --input-border-color-focus: var(--ds-input-border-color-focus, ${
-			r.primary
-		});\n                    --input-border-color-error: var(--ds-input-border-color-error, ${
-			r.danger
-		});\n                    --input-background: var(--ds-input-background, white);\n                    --input-text-color: var(--ds-input-text-color, ${
-			r.gray900
-		});\n                    --input-placeholder-color: var(--ds-input-placeholder-color, ${
-			r.gray500
-		});\n                    --input-label-color: var(--ds-input-label-color, ${
-			r.gray700
-		});\n                    --input-disabled-background: var(--ds-input-disabled-background, ${
-			r.gray100
-		});\n                    --input-disabled-color: var(--ds-input-disabled-color, ${
-			r.gray600
-		});\n                }\n\n                .input-container {\n                    position: relative;\n                    margin-bottom: ${i};\n                }\n\n                label {\n                    display: block;\n                    margin-bottom: ${a};\n                    font-family: ${d};\n                    font-size: ${
-			c.sm
-		};\n                    font-weight: ${
-			b.medium
-		};\n                    color: var(--input-label-color);\n                }\n\n                input {\n                    width: 100%;\n                    padding: ${s} ${i};\n                    font-family: ${d};\n                    font-size: ${
-			c.base
-		};\n                    color: var(--input-text-color);\n                    background-color: var(--input-background);\n                    border: 1px solid var(--input-border-color);\n                    border-radius: 4px;\n                    transition: border-color 0.2s, box-shadow 0.2s;\n                    box-sizing: border-box;\n                }\n\n                input:hover:not(:disabled) {\n                    border-color: var(--input-border-color-hover);\n                }\n\n                input:focus {\n                    outline: none;\n                    border-color: var(--input-border-color-focus);\n                    box-shadow: 0 0 0 3px ${
-			r.primaryLight
-		}40;\n                }\n\n                input::placeholder {\n                    color: var(--input-placeholder-color);\n                }\n\n                input:disabled {\n                    background-color: var(--input-disabled-background);\n                    color: var(--input-disabled-color);\n                    cursor: not-allowed;\n                }\n\n                .error-message {\n                    margin-top: ${a};\n                    color: var(--input-border-color-error);\n                    font-size: ${
-			c.sm
-		};\n                }\n\n                input.error {\n                    border-color: var(--input-border-color-error);\n                }\n\n                input.error:focus {\n                    box-shadow: 0 0 0 3px ${
-			r.dangerLight
-		}40;\n                }\n            </style>\n            \n            <div class="input-container">\n                ${
-			l ? `<label for="input">${l}</label>` : ''
-		}\n                <input \n                    id="input"\n                    type="${h}" \n                    placeholder="${t}" \n                    value="${e}" \n                    ?disabled="${n}" \n                    class="${
-			o ? 'error' : ''
-		}"\n                />\n                ${
-			o ? `<div class="error-message">${o}</div>` : ''
-		}\n            </div>\n        `;
+		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                    display: block;\n                    --input-border-color: var(--ds-input-border-color, ${r.gray300});\n                    --input-border-color-hover: var(--ds-input-border-color-hover, ${r.gray400});\n                    --input-border-color-focus: var(--ds-input-border-color-focus, ${r.primary});\n                    --input-border-color-error: var(--ds-input-border-color-error, ${r.danger});\n                    --input-background: var(--ds-input-background, white);\n                    --input-text-color: var(--ds-input-text-color, ${r.gray900});\n                    --input-placeholder-color: var(--ds-input-placeholder-color, ${r.gray500});\n                    --input-label-color: var(--ds-input-label-color, ${r.gray700});\n                    --input-disabled-background: var(--ds-input-disabled-background, ${r.gray100});\n                    --input-disabled-color: var(--ds-input-disabled-color, ${r.gray600});\n                }\n\n                .input-container {\n                    position: relative;\n                    margin-bottom: ${i};\n                }\n\n                label {\n                    display: block;\n                    margin-bottom: ${a};\n                    font-family: ${d};\n                    font-size: ${c.sm};\n                    font-weight: ${b.medium};\n                    color: var(--input-label-color);\n                }\n\n                input {\n                    width: 100%;\n                    padding: ${s} ${i};\n                    font-family: ${d};\n                    font-size: ${c.base};\n                    color: var(--input-text-color);\n                    background-color: var(--input-background);\n                    border: 1px solid var(--input-border-color);\n                    border-radius: 4px;\n                    transition: border-color 0.2s, box-shadow 0.2s;\n                    box-sizing: border-box;\n                }\n\n                input:hover:not(:disabled) {\n                    border-color: var(--input-border-color-hover);\n                }\n\n                input:focus {\n                    outline: none;\n                    border-color: var(--input-border-color-focus);\n                    box-shadow: 0 0 0 3px ${r.primaryLight}40;\n                }\n\n                input::placeholder {\n                    color: var(--input-placeholder-color);\n                }\n\n                input:disabled {\n                    background-color: var(--input-disabled-background);\n                    color: var(--input-disabled-color);\n                    cursor: not-allowed;\n                }\n\n                .error-message {\n                    margin-top: ${a};\n                    color: var(--input-border-color-error);\n                    font-size: ${c.sm};\n                }\n\n                input.error {\n                    border-color: var(--input-border-color-error);\n                }\n\n                input.error:focus {\n                    box-shadow: 0 0 0 3px ${r.dangerLight}40;\n                }\n            </style>\n            \n            <div class="input-container">\n                ${l ? `<label for="input">${l}</label>` : ''}\n                <input \n                    id="input"\n                    type="${h}" \n                    placeholder="${t}" \n                    value="${e}" \n                    ?disabled="${n}" \n                    class="${o ? 'error' : ''}"\n                />\n                ${o ? `<div class="error-message">${o}</div>` : ''}\n            </div>\n        `;
 	}
 }
 customElements.define('ds-input', g);
@@ -443,15 +375,7 @@ class f extends HTMLElement {
 	render() {
 		const t = this.getAttribute('elevation') || 'medium',
 			e = this.hasAttribute('hover-effect');
-		this.shadowRoot.innerHTML = `\n\t\t\t<style>\n\t\t\t\t:host {\n\t\t\t\tdisplay: block;\n\t\t\t\t--card-background: var(--ds-card-background, white);\n\t\t\t\t--card-border-radius: var(--ds-card-border-radius, 8px);\n\t\t\t\t--card-border-color: var(--ds-card-border-color, ${
-			r.gray200
-		});\n\t\t\t\t--card-padding: var(--ds-card-padding, ${l});\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\t.card {\n\t\t\t\tbackground-color: var(--card-background);\n\t\t\t\tborder-radius: var(--card-border-radius);\n\t\t\t\tborder: 1px solid var(--card-border-color);\n\t\t\t\tpadding: var(--card-padding);\n\t\t\t\tbox-shadow: ${
-			h[t]
-		};\n\t\t\t\ttransition: box-shadow 0.3s, transform 0.3s;\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\t${
-			e
-				? `\n\t\t\t\t.card:hover {\n\t\t\t\tbox-shadow: ${h.high};\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\t}\n\t\t\t\t`
-				: ''
-		}\n\t\t\t</style>\n\t\t\t\n\t\t\t<div class="card">\n\t\t\t\t<slot></slot>\n\t\t\t</div>\n    \t`;
+		this.shadowRoot.innerHTML = `\n\t\t\t<style>\n\t\t\t\t:host {\n\t\t\t\tdisplay: block;\n\t\t\t\t--card-background: var(--ds-card-background, white);\n\t\t\t\t--card-border-radius: var(--ds-card-border-radius, 8px);\n\t\t\t\t--card-border-color: var(--ds-card-border-color, ${r.gray200});\n\t\t\t\t--card-padding: var(--ds-card-padding, ${l});\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\t.card {\n\t\t\t\tbackground-color: var(--card-background);\n\t\t\t\tborder-radius: var(--card-border-radius);\n\t\t\t\tborder: 1px solid var(--card-border-color);\n\t\t\t\tpadding: var(--card-padding);\n\t\t\t\tbox-shadow: ${h[t]};\n\t\t\t\ttransition: box-shadow 0.3s, transform 0.3s;\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\t${e ? `\n\t\t\t\t.card:hover {\n\t\t\t\tbox-shadow: ${h.high};\n\t\t\t\ttransform: translateY(-2px);\n\t\t\t\t}\n\t\t\t\t` : ''}\n\t\t\t</style>\n\t\t\t\n\t\t\t<div class="card">\n\t\t\t\t<slot></slot>\n\t\t\t</div>\n    \t`;
 	}
 }
 customElements.define('ds-card', f);
@@ -519,34 +443,7 @@ class y extends HTMLElement {
 		const t = Array.from(this.children).map(
 			(t, e) => t.getAttribute('label') || `Tab ${e + 1}`,
 		);
-		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                display: block;\n                --tabs-color: var(--ds-tabs-color, ${
-			r.gray900
-		});\n                --tabs-color-hover: var(--ds-tabs-color-hover, ${
-			r.primary
-		});\n                --tabs-active-color: var(--ds-tabs-active-color, ${
-			r.primary
-		});\n                --tabs-active-border-color: var(--ds-tabs-active-border-color, ${
-			r.primary
-		});\n                --tabs-border-color: var(--ds-tabs-border-color, ${
-			r.gray300
-		});\n                }\n                \n                .tabs-container {\n                display: flex;\n                flex-direction: column;\n                }\n                \n                .tab-list {\n                display: flex;\n                border-bottom: 1px solid var(--tabs-border-color);\n                margin-bottom: ${i};\n                }\n                \n                .tab {\n                padding: ${s} ${i};\n                cursor: pointer;\n                font-family: ${d};\n                font-size: ${
-			c.base
-		};\n                font-weight: ${
-			b.medium
-		};\n                color: var(--tabs-color);\n                background: transparent;\n                border: none;\n                border-bottom: 2px solid transparent;\n                margin-bottom: -1px;\n                transition: color 0.2s, border-color 0.2s;\n                }\n                \n                .tab:hover {\n                color: var(--tabs-color-hover);\n                }\n                \n                .tab.active {\n                color: var(--tabs-active-color);\n                border-bottom: 2px solid var(--tabs-active-border-color);\n                }\n                \n                .tab-panel {\n                display: none;\n                }\n                \n                .tab-panel.active {\n                display: block;\n                }\n            </style>\n            \n            <div class="tabs-container">\n                <div class="tab-list" role="tablist">\n                ${t
-			.map(
-				(t, e) =>
-					`\n                    <button \n                    class="tab ${
-						e === this._activeTab ? 'active' : ''
-					}" \n                    role="tab" \n                    id="tab-${e}" \n                    aria-selected="${
-						e === this._activeTab
-					}" \n                    tabindex="${
-						e === this._activeTab ? '0' : '-1'
-					}"\n                    >\n                    ${t}\n                    </button>\n                `,
-			)
-			.join(
-				'',
-			)}\n                </div>\n                <div class="tab-content">\n                <slot></slot>\n                </div>\n            </div>\n        `;
+		this.shadowRoot.innerHTML = `\n            <style>\n                :host {\n                display: block;\n                --tabs-color: var(--ds-tabs-color, ${r.gray900});\n                --tabs-color-hover: var(--ds-tabs-color-hover, ${r.primary});\n                --tabs-active-color: var(--ds-tabs-active-color, ${r.primary});\n                --tabs-active-border-color: var(--ds-tabs-active-border-color, ${r.primary});\n                --tabs-border-color: var(--ds-tabs-border-color, ${r.gray300});\n                }\n                \n                .tabs-container {\n                display: flex;\n                flex-direction: column;\n                }\n                \n                .tab-list {\n                display: flex;\n                border-bottom: 1px solid var(--tabs-border-color);\n                margin-bottom: ${i};\n                }\n                \n                .tab {\n                padding: ${s} ${i};\n                cursor: pointer;\n                font-family: ${d};\n                font-size: ${c.base};\n                font-weight: ${b.medium};\n                color: var(--tabs-color);\n                background: transparent;\n                border: none;\n                border-bottom: 2px solid transparent;\n                margin-bottom: -1px;\n                transition: color 0.2s, border-color 0.2s;\n                }\n                \n                .tab:hover {\n                color: var(--tabs-color-hover);\n                }\n                \n                .tab.active {\n                color: var(--tabs-active-color);\n                border-bottom: 2px solid var(--tabs-active-border-color);\n                }\n                \n                .tab-panel {\n                display: none;\n                }\n                \n                .tab-panel.active {\n                display: block;\n                }\n            </style>\n            \n            <div class="tabs-container">\n                <div class="tab-list" role="tablist">\n                ${t.map((t, e) => `\n                    <button \n                    class="tab ${e === this._activeTab ? 'active' : ''}" \n                    role="tab" \n                    id="tab-${e}" \n                    aria-selected="${e === this._activeTab}" \n                    tabindex="${e === this._activeTab ? '0' : '-1'}"\n                    >\n                    ${t}\n                    </button>\n                `).join('')}\n                </div>\n                <div class="tab-content">\n                <slot></slot>\n                </div>\n            </div>\n        `;
 	}
 }
 customElements.define('ds-tabs', y);
@@ -686,11 +583,7 @@ class w extends HTMLElement {
 	}
 	render() {
 		const t = `\n        :host {\n          display: inline-block;\n        }\n        \n        .spinner-container {\n          display: inline-flex;\n          flex-direction: column;\n          align-items: center;\n          justify-content: center;\n        }\n        \n        .spinner {\n          width: ${this.size}px;\n          height: ${this.size}px;\n          border: ${this.thickness}px solid rgba(0, 0, 0, 0.1);\n          border-top-color: ${this.color};\n          border-radius: 50%;\n          animation: spin ${this.duration}s linear infinite;\n        }\n        \n        .spinner-label {\n          margin-top: 8px;\n          font-family: sans-serif;\n          font-size: 14px;\n          color: #666;\n        }\n        \n        @keyframes spin {\n          to {\n            transform: rotate(360deg);\n          }\n        }\n      `,
-			e = `\n        <div class="spinner-container">\n          <div class="spinner" role="progressbar" aria-label="${
-				this.label
-			}"></div>\n          ${
-				this.label ? `<div class="spinner-label">${this.label}</div>` : ''
-			}\n        </div>\n      `;
+			e = `\n        <div class="spinner-container">\n          <div class="spinner" role="progressbar" aria-label="${this.label}"></div>\n          ${this.label ? `<div class="spinner-label">${this.label}</div>` : ''}\n        </div>\n      `;
 		this.shadowRoot.innerHTML = `\n        <style>${t}</style>\n        ${e}\n      `;
 	}
 }

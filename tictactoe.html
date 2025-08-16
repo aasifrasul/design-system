@@ -88,6 +88,7 @@
 			[0, 4, 8],
 			[2, 4, 6],
 		];
+		let container = null;
 
 		document.addEventListener('DOMContentLoaded', function () {
 			console.log('loaded');
@@ -104,16 +105,16 @@
 			updateHeading();
 			setUpBoard();
 			setUpListeners();
+			container = document.querySelector('.container');
 		}
 
 		function setUpListeners() {
-			document.querySelector('.container').addEventListener('click', function (e) {
+			container.addEventListener('click', function (e) {
 				if (e.target.classList.contains('box')) updateBoard(e.target.classList[1]);
 			});
 		}
 
 		function setUpBoard() {
-			const container = document.querySelector('.container');
 			const fragment = document.createDocumentFragment();
 			container.innerHTML = '';
 

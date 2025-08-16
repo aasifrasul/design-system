@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Slider</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style>
+			.container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+			}
+
+			.slider-container {
+				display: flex;
+				align-items: center;
+				flex-direction: row;
+			}
+
+			.slider {
+				margin-right: 20px;
+				margin-left: 20px;
+				width: 500px;
+				height: 500px;
+				background-color: #f0f0f0; /* A light gray background color */
+			}
+
+			.image {
+				width: inherit;
+				height: inherit;
+			}
+
+			.image.loading {
+				background: #ddd url('data:image/svg+xml;utf8,<svg>...</svg>') center no-repeat;
+			}
+
+			.slider-container > button {
+				text-decoration: none;
+				display: inline-block;
+				padding: 8px 16px;
+			}
+
+			.slider-container > button:hover {
+				background-color: #ddd;
+				color: black;
+			}
+
+			.previous {
+				background-color: #f1f1f1;
+				color: black;
+			}
+
+			.next {
+				background-color: #04aa6d;
+				color: white;
+			}
+
+			.round {
+				border-radius: 8%;
+			}
+
+			.control-container {
+				margin-top: 20px;
+			}
+
+			button {
+				border-radius: 6px;
+				width: 100px;
+				height: 35px;
+				cursor: pointer;
+				font-size: large;
+			}
+		</style>
+		<script type="module" src="./src/libs/slider.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="slider-container">
+				<button class="prev round" aria-label="Previous image">
+					&lt;Previous
+				</button>
+				<div class="slider">
+					<img src="https://placehold.co/500x500" class="image" alt="Image" />
+				</div>
+				<button class="next round" aria-label="Next image">Next&gt;</button>
+			</div>
+			<div class="control-container">
+				<button aria-label="Control Button">Stop</button>
+			</div>
+		</div>
+	</body>
+</html>

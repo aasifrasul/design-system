@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Marketplace Integration - Order Capture Flow</title>
+		<style>
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				margin: 0;
+				padding: 20px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				min-height: 100vh;
+			}
+
+			.diagram-container {
+				background: white;
+				border: 2px solid #ddd;
+				border-radius: 8px;
+				padding: 30px;
+				min-width: 1200px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			}
+
+			.diagram-title {
+				text-align: center;
+				font-size: 24px;
+				font-weight: bold;
+				color: #333;
+				margin-bottom: 30px;
+				padding: 15px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				border-radius: 8px;
+			}
+
+			.layer {
+				margin-bottom: 20px;
+				border: 2px solid #333;
+				border-radius: 8px;
+				background: white;
+			}
+
+			.layer-title {
+				background: #4caf50;
+				color: white;
+				padding: 12px 20px;
+				font-weight: bold;
+				font-size: 20px;
+				margin: 0;
+				border-radius: 6px 6px 0 0;
+			}
+
+			.client-layer .layer-title {
+				background: #ff6b6b;
+			}
+			.client-data-layer .layer-title {
+				background: #4ecdc4;
+			}
+			.gateway-layer .layer-title {
+				background: #45b7d1;
+			}
+			.service-layer .layer-title {
+				background: #96ceb4;
+			}
+			.data-layer .layer-title {
+				background: #ffeaa7;
+				color: #333;
+			}
+			.integration-layer .layer-title {
+				background: #dda0dd;
+			}
+			.infra-layer .layer-title {
+				background: #778899;
+			}
+
+			.layer-content {
+				padding: 20px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 15px;
+				justify-content: space-around;
+				align-items: flex-start;
+			}
+
+			.component {
+				border: 2px solid #333;
+				border-radius: 8px;
+				padding: 15px;
+				background: #f9f9f9;
+				min-width: 180px;
+				max-width: 220px;
+				text-align: center;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s ease;
+			}
+
+			.component:hover {
+				background: #e3f2fd;
+				transform: translateY(-2px);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+			}
+
+			.component-title {
+				font-weight: bold;
+				font-size: 18px;
+				color: #333;
+				margin-bottom: 8px;
+				border-bottom: 1px solid #ddd;
+				padding-bottom: 5px;
+			}
+
+			.component-desc {
+				font-size: 16px;
+				color: #666;
+				line-height: 1.3;
+			}
+
+			.connection-arrows {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 10px 0;
+				gap: 20px;
+			}
+
+			.arrow {
+				font-size: 24px;
+				color: #333;
+				animation: bounce 2s infinite;
+			}
+
+			@keyframes bounce {
+				0%,
+				20%,
+				50%,
+				80%,
+				100% {
+					transform: translateY(0);
+				}
+				40% {
+					transform: translateY(-5px);
+				}
+				60% {
+					transform: translateY(-3px);
+				}
+			}
+
+			.connection-label {
+				font-size: 22px;
+				color: #666;
+				font-weight: bold;
+				background: #fff;
+				padding: 4px 8px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+
+			.data-flow-container {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin: 15px 0;
+				padding: 10px;
+				background: #f0f8ff;
+				border-radius: 8px;
+				border: 1px dashed #4169e1;
+			}
+
+			.flow-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				flex: 1;
+			}
+
+			.flow-arrow-horizontal {
+				font-size: 20px;
+				color: #4169e1;
+				margin: 0 10px;
+			}
+
+			.integration-box {
+				border: 2px solid #8a2be2;
+				border-radius: 8px;
+				padding: 15px;
+				background: #f8f0ff;
+				margin: 10px;
+				min-width: 200px;
+			}
+
+			.integration-title {
+				font-weight: bold;
+				color: #8a2be2;
+				margin-bottom: 8px;
+				font-size: 14px;
+			}
+
+			.integration-desc {
+				font-size: 14px;
+				color: #666;
+			}
+
+			.tenant-isolation {
+				background: #fff3cd;
+				border: 2px dashed #ffc107;
+				border-radius: 8px;
+				padding: 15px;
+				margin: 20px 0;
+				text-align: center;
+			}
+
+			.tenant-title {
+				font-weight: bold;
+				color: #856404;
+				margin-bottom: 10px;
+			}
+
+			.security-badge {
+				background: #d4edda;
+				border: 1px solid #c3e6cb;
+				color: #155724;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 14px;
+				font-weight: bold;
+			}
+
+			.performance-badge {
+				background: #cce5ff;
+				border: 1px solid #99d6ff;
+				color: #004085;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 14px;
+				font-weight: bold;
+			}
+
+			.legend {
+				margin-top: 30px;
+				padding: 20px;
+				background: #f8f9fa;
+				border-radius: 8px;
+				border: 1px solid #dee2e6;
+			}
+
+			.legend-title {
+				font-weight: bold;
+				margin-bottom: 15px;
+				color: #333;
+			}
+
+			.legend-items {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 10px;
+			}
+
+			.legend-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.legend-color {
+				width: 20px;
+				height: 20px;
+				border-radius: 4px;
+				border: 1px solid #333;
+			}
+
+			.container {
+				max-width: 1400px;
+				margin: 0 auto;
+				background: white;
+				border-radius: 15px;
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+				overflow: hidden;
+			}
+
+			.header {
+				background: linear-gradient(45deg, #2c3e50, #3498db);
+				color: white;
+				padding: 30px;
+				text-align: center;
+			}
+
+			.header h1 {
+				margin: 0;
+				font-size: 2.5em;
+				font-weight: 300;
+			}
+
+			.header p {
+				margin: 10px 0 0 0;
+				opacity: 0.9;
+				font-size: 1.1em;
+			}
+
+			.architecture-diagram {
+				padding: 40px;
+				background: #f8f9fa;
+			}
+
+			.layer-header {
+				padding: 15px 25px;
+				font-weight: 600;
+				font-size: 1.2em;
+				color: white;
+			}
+
+			.client-layer {
+				background: linear-gradient(45deg, #e74c3c, #c0392b);
+			}
+			.gateway-layer {
+				background: linear-gradient(45deg, #f39c12, #e67e22);
+			}
+			.service-layer {
+				background: linear-gradient(45deg, #27ae60, #2ecc71);
+			}
+			.data-layer {
+				background: linear-gradient(45deg, #8e44ad, #9b59b6);
+			}
+			.infra-layer {
+				background: linear-gradient(45deg, #34495e, #2c3e50);
+			}
+
+			.service-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+				gap: 20px;
+			}
+
+			.service-box {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+				padding: 20px;
+				border-radius: 10px;
+				box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+				transition:
+					transform 0.3s ease,
+					box-shadow 0.3s ease;
+			}
+
+			.service-box:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+			}
+
+			.service-title {
+				font-weight: 600;
+				margin-bottom: 10px;
+				font-size: 1.1em;
+			}
+
+			.service-desc {
+				font-size: 0.9em;
+				opacity: 0.9;
+				line-height: 1.4;
+			}
+
+			.data-flow {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin: 20px 0;
+				flex-wrap: wrap;
+				gap: 15px;
+			}
+
+			.flow-arrow {
+				font-size: 2em;
+				color: #3498db;
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.5;
+				}
+			}
+
+			.tech-stack {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: 15px;
+				margin-top: 20px;
+			}
+
+			.tech-item {
+				background: linear-gradient(45deg, #36d1dc, #5b86e5);
+				color: white;
+				padding: 15px;
+				border-radius: 8px;
+				text-align: center;
+				font-weight: 500;
+			}
+
+			.legend {
+				display: flex;
+				justify-content: center;
+				gap: 30px;
+				margin: 30px 0;
+				flex-wrap: wrap;
+			}
+
+			.legend-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.legend-color {
+				width: 20px;
+				height: 20px;
+				border-radius: 4px;
+			}
+
+			.communication-pattern {
+				background: #ecf0f1;
+				padding: 20px;
+				border-radius: 10px;
+				margin: 20px 0;
+				border-left: 4px solid #3498db;
+			}
+
+			.pattern-title {
+				font-weight: 600;
+				color: #2c3e50;
+				margin-bottom: 10px;
+			}
+
+			.integration-overview {
+				padding: 30px;
+				background: #f8f9fa;
+			}
+
+			.flow-diagram {
+				display: grid;
+				grid-template-columns: 1fr 60px 1fr 60px 1fr;
+				gap: 20px;
+				align-items: center;
+				margin: 30px 0;
+				padding: 20px;
+				background: white;
+				border-radius: 10px;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			.flow-step {
+				background: linear-gradient(135deg, #4caf50, #45a049);
+				color: white;
+				padding: 20px;
+				border-radius: 10px;
+				text-align: center;
+				min-height: 120px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.flow-step.marketplace {
+				background: linear-gradient(135deg, #ff6b6b, #ff5252);
+			}
+
+			.flow-step.integration {
+				background: linear-gradient(135deg, #ffa726, #ff9800);
+			}
+
+			.flow-step.platform {
+				background: linear-gradient(135deg, #42a5f5, #2196f3);
+			}
+
+			.flow-arrow {
+				font-size: 2.5em;
+				color: #666;
+				text-align: center;
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					opacity: 1;
+					transform: scale(1);
+				}
+				50% {
+					opacity: 0.7;
+					transform: scale(1.1);
+				}
+			}
+
+			.step-title {
+				font-weight: bold;
+				font-size: 18px;
+				margin-bottom: 8px;
+			}
+
+			.step-desc {
+				font-size: 16px;
+				opacity: 0.95;
+			}
+
+			.integration-methods {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+				gap: 25px;
+				margin: 30px 0;
+			}
+
+			.method-card {
+				background: white;
+				border-radius: 12px;
+				padding: 25px;
+				box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+				border-left: 5px solid #4caf50;
+				transition:
+					transform 0.3s ease,
+					box-shadow 0.3s ease;
+			}
+
+			.method-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+			}
+
+			.method-card.webhook {
+				border-left-color: #ff6b6b;
+			}
+			.method-card.api-polling {
+				border-left-color: #ffa726;
+			}
+			.method-card.unified-dashboard {
+				border-left-color: #42a5f5;
+			}
+
+			.method-title {
+				font-size: 1.3em;
+				font-weight: bold;
+				color: #333;
+				margin-bottom: 15px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.method-icon {
+				font-size: 1.5em;
+			}
+
+			.method-content {
+				color: #666;
+				margin-bottom: 15px;
+			}
+
+			.code-block {
+				background: #2d3748;
+				color: #e2e8f0;
+				padding: 15px;
+				border-radius: 8px;
+				font-family: 'Courier New', monospace;
+				font-size: 0.85em;
+				overflow-x: auto;
+				margin: 15px 0;
+			}
+
+			.benefits-list {
+				list-style: none;
+				padding: 0;
+			}
+
+			.benefits-list li {
+				padding: 5px 0;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.benefits-list li::before {
+				content: '✅';
+				font-size: 1.1em;
+			}
+
+			.technical-details {
+				background: #e8f5e8;
+				border-radius: 10px;
+				padding: 20px;
+				margin: 20px 0;
+				border-left: 4px solid #4caf50;
+			}
+
+			.warning-box {
+				background: #fff3cd;
+				border: 1px solid #ffeaa7;
+				border-radius: 8px;
+				padding: 15px;
+				margin: 15px 0;
+				color: #856404;
+			}
+
+			.warning-box strong {
+				color: #8b4513;
+			}
+
+			.data-flow-sequence {
+				background: white;
+				border-radius: 10px;
+				padding: 25px;
+				margin: 20px 0;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			}
+
+			.sequence-step {
+				display: flex;
+				align-items: center;
+				margin: 15px 0;
+				padding: 15px;
+				background: #f8f9fa;
+				border-radius: 8px;
+				border-left: 4px solid #4caf50;
+			}
+
+			.sequence-number {
+				background: #4caf50;
+				color: white;
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				margin-right: 15px;
+				flex-shrink: 0;
+			}
+
+			.architecture-component {
+				background: linear-gradient(135deg, #66eab9, #cabfd4);
+				color: white;
+				padding: 15px;
+				border-radius: 8px;
+				margin: 10px 0;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="diagram-container">
+			<div class="diagram-title">
+				🍽️ Multi-Tenant Food Delivery Platform - System Architecture
+			</div>
+
+			<!-- Client Layer -->
+			<div class="layer client-layer">
+				<div class="layer-title">📱 Client Layer - User Interfaces</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">Customer Web App</div>
+						<div class="component-desc">
+							React 18 + Next.js<br />
+							PWA capabilities<br />
+							Real-time updates<br />
+							<span class="performance-badge">SSR</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Mobile Apps</div>
+						<div class="component-desc">
+							React Native<br />
+							iOS + Android<br />
+							Push notifications<br />
+							<span class="performance-badge">Native</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Restaurant Dashboard</div>
+						<div class="component-desc">
+							Admin panel<br />
+							Menu management<br />
+							Order processing<br />
+							<span class="security-badge">RBAC</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Delivery Partner App</div>
+						<div class="component-desc">
+							Driver interface<br />
+							Route optimization<br />
+							Real-time tracking<br />
+							<span class="performance-badge">GPS</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="connection-arrows">
+				<span class="arrow">⬇️</span>
+				<span class="connection-label">Client-Side Data Management</span>
+				<span class="arrow">⬇️</span>
+			</div>
+
+			<!-- NEW: Client Data Layer -->
+			<div class="layer client-data-layer">
+				<div class="layer-title">
+					💾 Client Data Layer - Edge Computing & State Management
+				</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">Service Workers</div>
+						<div class="component-desc">
+							Offline caching<br />
+							Background sync<br />
+							Push notification handling<br />
+							<span class="performance-badge">PWA</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Web Workers</div>
+						<div class="component-desc">
+							Heavy computations<br />
+							Data processing<br />
+							Non-blocking operations<br />
+							<span class="performance-badge">Parallel</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Client State Management</div>
+						<div class="component-desc">
+							Zustand/Redux<br />
+							Local component state<br />
+							Form state management<br />
+							<span class="performance-badge">React</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Server State Cache</div>
+						<div class="component-desc">
+							React Query/SWR<br />
+							Intelligent caching<br />
+							Optimistic updates<br />
+							<span class="performance-badge">Cache</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Browser Storage</div>
+						<div class="component-desc">
+							IndexedDB<br />
+							LocalStorage<br />
+							SessionStorage<br />
+							<span class="security-badge">Encrypted</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">CDN Edge Cache</div>
+						<div class="component-desc">
+							Static assets<br />
+							Menu images<br />
+							Geographic distribution<br />
+							<span class="performance-badge">Global</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="data-flow-container">
+				<div class="flow-item">
+					<div style="font-size: 16px; font-weight: bold">Real-time</div>
+					<div style="font-size: 14px">WebSocket</div>
+				</div>
+				<span class="flow-arrow-horizontal">➡️</span>
+				<div class="flow-item">
+					<div style="font-size: 16px; font-weight: bold">HTTP/2</div>
+					<div style="font-size: 14px">REST/GraphQL</div>
+				</div>
+				<span class="flow-arrow-horizontal">➡️</span>
+				<div class="flow-item">
+					<div style="font-size: 16px; font-weight: bold">Background</div>
+					<div style="font-size: 14px">Service Worker</div>
+				</div>
+			</div>
+
+			<!-- API Gateway Layer -->
+			<div class="layer gateway-layer">
+				<div class="layer-title">🚪 API Gateway & Security Layer</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">API Gateway</div>
+						<div class="component-desc">
+							Kong/AWS ALB<br />
+							Rate limiting<br />
+							Request routing<br />
+							<span class="security-badge">SSL/TLS</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Load Balancer</div>
+						<div class="component-desc">
+							Application LB<br />
+							Health checks<br />
+							Auto-scaling<br />
+							<span class="performance-badge">HA</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Identity & Auth</div>
+						<div class="component-desc">
+							JWT tokens<br />
+							OAuth2/OIDC<br />
+							Multi-tenant auth<br />
+							<span class="security-badge">Zero Trust</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">API Documentation</div>
+						<div class="component-desc">
+							OpenAPI/Swagger<br />
+							Auto-generated docs<br />
+							Interactive testing<br />
+							<span class="performance-badge">Dev Tools</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="connection-arrows">
+				<span class="arrow">⬇️</span>
+				<span class="connection-label">Service Mesh Communication</span>
+				<span class="arrow">⬇️</span>
+			</div>
+
+			<!-- Core Services Layer -->
+			<div class="layer service-layer">
+				<div class="layer-title">⚙️ Core Microservices Layer</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">Catalog Management</div>
+						<div class="component-desc">
+							Menu CRUD operations<br />
+							Category management<br />
+							Pricing & availability<br />
+							<span class="performance-badge">MongoDB</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Search & Discovery</div>
+						<div class="component-desc">
+							Elasticsearch engine<br />
+							Faceted search<br />
+							ML recommendations<br />
+							<span class="performance-badge">Indexed</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Cart & Checkout</div>
+						<div class="component-desc">
+							Session management<br />
+							Price calculations<br />
+							Tax computation<br />
+							<span class="security-badge">PCI DSS</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Order Management</div>
+						<div class="component-desc">
+							Order lifecycle<br />
+							State machine<br />
+							Workflow orchestration<br />
+							<span class="performance-badge">Event-driven</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Payment Service</div>
+						<div class="component-desc">
+							Multiple gateways<br />
+							Wallet integration<br />
+							Refund processing<br />
+							<span class="security-badge">Encrypted</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Restaurant Management</div>
+						<div class="component-desc">
+							Tenant onboarding<br />
+							Profile management<br />
+							Operational settings<br />
+							<span class="security-badge">Multi-tenant</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Location & Delivery</div>
+						<div class="component-desc">
+							Geospatial queries<br />
+							Delivery zones<br />
+							ETA calculations<br />
+							<span class="performance-badge">PostGIS</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Notification Service</div>
+						<div class="component-desc">
+							Multi-channel delivery<br />
+							Template management<br />
+							Delivery tracking<br />
+							<span class="performance-badge">Queue-based</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Analytics & Reporting</div>
+						<div class="component-desc">
+							Real-time metrics<br />
+							Business intelligence<br />
+							Tenant reports<br />
+							<span class="performance-badge">ClickHouse</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="connection-arrows">
+				<span class="arrow">⬇️</span>
+				<span class="connection-label">Event Streaming & Database Operations</span>
+				<span class="arrow">⬇️</span>
+			</div>
+
+			<!-- Data Layer -->
+			<div class="layer data-layer">
+				<div class="layer-title">🗄️ Data & Event Streaming Layer</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">PostgreSQL Cluster</div>
+						<div class="component-desc">
+							ACID transactions<br />
+							Tenant partitioning<br />
+							Read replicas<br />
+							<span class="performance-badge">Primary DB</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">MongoDB</div>
+						<div class="component-desc">
+							Document storage<br />
+							Flexible schemas<br />
+							Menu catalog data<br />
+							<span class="performance-badge">NoSQL</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Redis Cluster</div>
+						<div class="component-desc">
+							Session storage<br />
+							Application cache<br />
+							Rate limiting<br />
+							<span class="performance-badge">In-memory</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Elasticsearch</div>
+						<div class="component-desc">
+							Search indices<br />
+							Full-text search<br />
+							Analytics data<br />
+							<span class="performance-badge">Search</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Apache Kafka</div>
+						<div class="component-desc">
+							Event streaming<br />
+							Message queuing<br />
+							Service communication<br />
+							<span class="performance-badge">Stream</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">ClickHouse</div>
+						<div class="component-desc">
+							Analytics warehouse<br />
+							Time-series data<br />
+							OLAP queries<br />
+							<span class="performance-badge">Analytics</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- External Integrations -->
+			<div class="layer integration-layer">
+				<div class="layer-title">🔌 External Integrations & Third-Party Services</div>
+				<div class="layer-content">
+					<div class="integration-box">
+						<div class="integration-title">🏪 Marketplace APIs</div>
+						<div class="integration-desc">
+							Delivery Hero, Uber Eats, DoorDash<br />
+							Order synchronization, Menu sync<br />
+							Webhook handling, API polling
+						</div>
+					</div>
+					<div class="integration-box">
+						<div class="integration-title">💳 Payment Gateways</div>
+						<div class="integration-desc">
+							Stripe, PayPal, Razorpay<br />
+							Multi-provider failover<br />
+							Webhook processing
+						</div>
+					</div>
+					<div class="integration-box">
+						<div class="integration-title">📧 Communication</div>
+						<div class="integration-desc">
+							SendGrid, Twilio, Firebase<br />
+							Email, SMS, Push notifications<br />
+							Template management
+						</div>
+					</div>
+					<div class="integration-box">
+						<div class="integration-title">🗺️ Maps & Location</div>
+						<div class="integration-desc">
+							Google Maps, Mapbox<br />
+							Geocoding, Routing<br />
+							Delivery optimization
+						</div>
+					</div>
+					<div class="integration-box">
+						<div class="integration-title">📊 Analytics & Monitoring</div>
+						<div class="integration-desc">
+							Mixpanel, Google Analytics<br />
+							DataDog, New Relic<br />
+							Performance monitoring
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Infrastructure Layer -->
+			<div class="layer infra-layer">
+				<div class="layer-title">☸️ Infrastructure & DevOps Layer</div>
+				<div class="layer-content">
+					<div class="component">
+						<div class="component-title">Kubernetes (EKS)</div>
+						<div class="component-desc">
+							Container orchestration<br />
+							Auto-scaling<br />
+							Service discovery<br />
+							<span class="performance-badge">Cloud Native</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Docker Containers</div>
+						<div class="component-desc">
+							Microservice packaging<br />
+							Immutable deployments<br />
+							Registry management<br />
+							<span class="performance-badge">Containerized</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">CI/CD Pipeline</div>
+						<div class="component-desc">
+							GitLab CI/CD<br />
+							Automated testing<br />
+							Blue-green deployment<br />
+							<span class="performance-badge">Automated</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Monitoring Stack</div>
+						<div class="component-desc">
+							Prometheus, Grafana<br />
+							Jaeger tracing<br />
+							Centralized logging<br />
+							<span class="performance-badge">Observability</span>
+						</div>
+					</div>
+					<div class="component">
+						<div class="component-title">Infrastructure as Code</div>
+						<div class="component-desc">
+							Terraform<br />
+							AWS CloudFormation<br />
+							Automated provisioning<br />
+							<span class="security-badge">Version Controlled</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Multi-tenancy Strategy -->
+			<div class="tenant-isolation">
+				<div class="tenant-title">🏢 Multi-Tenancy & Data Isolation Strategy</div>
+				<div
+					style="
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+						gap: 15px;
+						margin-top: 15px;
+					"
+				>
+					<div
+						style="
+							background: white;
+							padding: 10px;
+							border-radius: 4px;
+							border: 1px solid #ffc107;
+						"
+					>
+						<strong>Database Level:</strong><br />
+						Schema-per-tenant<br />
+						Row-level security<br />
+						Tenant-based sharding
+					</div>
+					<div
+						style="
+							background: white;
+							padding: 10px;
+							border-radius: 4px;
+							border: 1px solid #ffc107;
+						"
+					>
+						<strong>Application Level:</strong><br />
+						Tenant context propagation<br />
+						Isolated data access<br />
+						Resource quotas
+					</div>
+					<div
+						style="
+							background: white;
+							padding: 10px;
+							border-radius: 4px;
+							border: 1px solid #ffc107;
+						"
+					>
+						<strong>Client Level:</strong><br />
+						Tenant-specific caching<br />
+						Isolated state management<br />
+						Branded UI themes
+					</div>
+				</div>
+			</div>
+
+			<!-- Legend -->
+			<div class="legend">
+				<div class="legend-title">📋 Architecture Legend & Communication Patterns</div>
+				<div class="legend-items">
+					<div class="legend-item">
+						<div class="legend-color" style="background: #ff6b6b"></div>
+						<span><strong>Client Layer:</strong> User-facing applications</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #4ecdc4"></div>
+						<span
+							><strong>Client Data Layer:</strong> Edge computing & state
+							management</span
+						>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #45b7d1"></div>
+						<span><strong>Gateway Layer:</strong> API management & security</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #96ceb4"></div>
+						<span><strong>Service Layer:</strong> Core business logic</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #ffeaa7"></div>
+						<span><strong>Data Layer:</strong> Storage & event streaming</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #dda0dd"></div>
+						<span><strong>Integration Layer:</strong> External services</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-color" style="background: #778899"></div>
+						<span><strong>Infrastructure:</strong> Platform & DevOps</span>
+					</div>
+				</div>
+
+				<div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd">
+					<div style="font-weight: bold; margin-bottom: 10px">
+						🔄 Communication Patterns:
+					</div>
+					<div
+						style="
+							display: grid;
+							grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+							gap: 10px;
+							font-size: 12px;
+						"
+					>
+						<div><strong>Synchronous:</strong> REST APIs, GraphQL</div>
+						<div><strong>Asynchronous:</strong> Kafka events, message queues</div>
+						<div><strong>Real-time:</strong> WebSockets, Server-Sent Events</div>
+						<div><strong>Caching:</strong> Multi-level caching strategy</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="header">
+				<h1>🍽️ Marketplace Integration Strategy</h1>
+				<p>
+					How restaurants capture orders from external marketplaces through our
+					platform
+				</p>
+			</div>
+
+			<div class="integration-overview">
+				<h2>🎯 Integration Overview</h2>
+
+				<div class="flow-diagram">
+					<div class="flow-step marketplace">
+						<div class="step-title">🏪 External Marketplaces</div>
+						<div class="step-desc">
+							Delivery Hero<br />
+							Uber Eats<br />
+							DoorDash<br />
+							Grubhub
+						</div>
+					</div>
+
+					<div class="flow-arrow">⟶</div>
+
+					<div class="flow-step integration">
+						<div class="step-title">🔗 Integration Layer</div>
+						<div class="step-desc">
+							API Connectors<br />
+							Webhook Handlers<br />
+							Data Normalization<br />
+							Error Handling
+						</div>
+					</div>
+
+					<div class="flow-arrow">⟶</div>
+
+					<div class="flow-step platform">
+						<div class="step-title">🏢 Our Platform</div>
+						<div class="step-desc">
+							Unified Dashboard<br />
+							Order Management<br />
+							Restaurant Interface<br />
+							Analytics & Reporting
+						</div>
+					</div>
+				</div>
+
+				<div class="integration-methods">
+					<div class="method-card webhook">
+						<div class="method-title">
+							<span class="method-icon">📨</span>
+							Real-time Webhooks
+						</div>
+						<div class="method-content">
+							<strong>Primary Method:</strong> External marketplaces send order
+							notifications to our platform via webhooks in real-time.
+						</div>
+
+						<div class="code-block">
+							// Webhook endpoint for Delivery Hero orders POST
+							/api/webhooks/delivery-hero/orders { "event": "order.created",
+							"marketplace": "delivery_hero", "restaurant_id": "rest_123",
+							"order": { "id": "dh_order_456", "customer": {...}, "items": [...],
+							"total": 25.99, "delivery_address": {...}, "status": "confirmed" }
+							}
+						</div>
+
+						<ul class="benefits-list">
+							<li>Instant order notifications</li>
+							<li>Real-time status updates</li>
+							<li>Minimal latency</li>
+							<li>Event-driven architecture</li>
+						</ul>
+					</div>
+
+					<div class="method-card api-polling">
+						<div class="method-title">
+							<span class="method-icon">🔄</span>
+							API Polling & Sync
+						</div>
+						<div class="method-content">
+							<strong>Backup Method:</strong> Regular polling of marketplace APIs
+							to fetch new orders and sync status updates.
+						</div>
+
+						<div class="code-block">
+							// Scheduled job every 30 seconds async function
+							pollMarketplaceOrders() { const restaurants = await
+							getActiveRestaurants(); for (const restaurant of restaurants) {
+							const orders = await deliveryHeroAPI.getOrders({ restaurant_id:
+							restaurant.external_id, since: restaurant.last_sync_time }); await
+							processAndSyncOrders(orders, restaurant); } }
+						</div>
+
+						<ul class="benefits-list">
+							<li>Fallback mechanism</li>
+							<li>Historical data sync</li>
+							<li>Handles webhook failures</li>
+							<li>Configurable intervals</li>
+						</ul>
+					</div>
+
+					<div class="method-card unified-dashboard">
+						<div class="method-title">
+							<span class="method-icon">📊</span>
+							Unified Order Management
+						</div>
+						<div class="method-content">
+							<strong>Restaurant Experience:</strong> All orders from different
+							marketplaces appear in a single dashboard interface.
+						</div>
+
+						<div class="technical-details">
+							<strong>Key Features:</strong>
+							<ul>
+								<li>
+									<strong>Order Aggregation:</strong> Combine orders from
+									multiple sources
+								</li>
+								<li>
+									<strong>Status Synchronization:</strong> Update order
+									status across all platforms
+								</li>
+								<li>
+									<strong>Menu Sync:</strong> Push menu changes to all
+									connected marketplaces
+								</li>
+								<li>
+									<strong>Analytics:</strong> Unified reporting across all
+									channels
+								</li>
+							</ul>
+						</div>
+
+						<ul class="benefits-list">
+							<li>Single interface for all orders</li>
+							<li>Consistent workflow</li>
+							<li>Reduced training time</li>
+							<li>Centralized analytics</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="data-flow-sequence">
+					<h3>📋 Order Capture Flow - Step by Step</h3>
+
+					<div class="sequence-step">
+						<div class="sequence-number">1</div>
+						<div>
+							<strong>Customer Places Order:</strong> Customer orders food from
+							Restaurant ABC through Delivery Hero marketplace
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">2</div>
+						<div>
+							<strong>Marketplace Webhook:</strong> Delivery Hero sends webhook
+							to our platform: <code>POST /webhooks/delivery-hero/orders</code>
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">3</div>
+						<div>
+							<strong>Order Normalization:</strong> Our integration service
+							transforms the marketplace-specific order format into our standard
+							schema
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">4</div>
+						<div>
+							<strong>Tenant Routing:</strong> Order is routed to the correct
+							restaurant tenant based on restaurant_id mapping
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">5</div>
+						<div>
+							<strong>Restaurant Notification:</strong> Real-time notification
+							sent to restaurant dashboard and mobile app
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">6</div>
+						<div>
+							<strong>Order Processing:</strong> Restaurant accepts/rejects order
+							through our unified dashboard
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">7</div>
+						<div>
+							<strong>Status Sync Back:</strong> Order status updates are pushed
+							back to Delivery Hero via their API
+						</div>
+					</div>
+
+					<div class="sequence-step">
+						<div class="sequence-number">8</div>
+						<div>
+							<strong>Unified Tracking:</strong> Order appears in restaurant's
+							unified order management system alongside direct orders
+						</div>
+					</div>
+				</div>
+
+				<h3>🏗️ Technical Architecture Components</h3>
+
+				<div
+					style="
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+						gap: 15px;
+						margin: 20px 0;
+					"
+				>
+					<div class="architecture-component">
+						<div class="component-title">Marketplace Connector Service</div>
+						<div class="component-desc">
+							Handles API integrations for each marketplace<br />
+							Rate limiting, retry logic, error handling
+						</div>
+					</div>
+
+					<div class="architecture-component">
+						<div class="component-title">Webhook Handler Service</div>
+						<div class="component-desc">
+							Receives and processes incoming webhooks<br />
+							Signature verification, duplicate detection
+						</div>
+					</div>
+
+					<div class="architecture-component">
+						<div class="component-title">Order Normalization Engine</div>
+						<div class="component-desc">
+							Transforms marketplace-specific formats<br />
+							Data validation, schema mapping
+						</div>
+					</div>
+
+					<div class="architecture-component">
+						<div class="component-title">Tenant Router</div>
+						<div class="component-desc">
+							Maps external restaurant IDs to tenants<br />
+							Multi-tenant data isolation
+						</div>
+					</div>
+
+					<div class="architecture-component">
+						<div class="component-title">Sync Orchestrator</div>
+						<div class="component-desc">
+							Manages bi-directional data sync<br />
+							Status updates, menu synchronization
+						</div>
+					</div>
+
+					<div class="architecture-component">
+						<div class="component-title">Event Bus (Kafka)</div>
+						<div class="component-desc">
+							Distributes order events across services<br />
+							Reliable message delivery
+						</div>
+					</div>
+				</div>
+
+				<div class="warning-box">
+					<strong>⚠️ Important Considerations:</strong>
+					<ul>
+						<li>
+							<strong>Rate Limiting:</strong> Each marketplace has API rate
+							limits that must be respected
+						</li>
+						<li>
+							<strong>Data Privacy:</strong> Customer data from marketplaces must
+							be handled according to GDPR/privacy laws
+						</li>
+						<li>
+							<strong>Webhook Security:</strong> All webhooks must be verified
+							using signature validation
+						</li>
+						<li>
+							<strong>Idempotency:</strong> Handle duplicate webhook deliveries
+							gracefully
+						</li>
+						<li>
+							<strong>Error Handling:</strong> Robust retry mechanisms for failed
+							API calls
+						</li>
+					</ul>
+				</div>
+
+				<div class="technical-details">
+					<h4>🔧 Implementation Details:</h4>
+					<p>
+						<strong>Database Schema:</strong> Orders table includes `source` field
+						(direct, delivery_hero, uber_eats) and `external_order_id` for tracking
+					</p>
+					<p>
+						<strong>API Design:</strong> RESTful endpoints for each marketplace
+						with OpenAPI documentation
+					</p>
+					<p>
+						<strong>Security:</strong> OAuth2/API keys for marketplace
+						authentication, webhook signature verification
+					</p>
+					<p>
+						<strong>Monitoring:</strong> Real-time dashboards for integration
+						health, order sync status, and error rates
+					</p>
+					<p>
+						<strong>Testing:</strong> Sandbox environments for each marketplace,
+						automated integration tests
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
