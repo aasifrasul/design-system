@@ -2,8 +2,8 @@
 	"type": "module",
 	"dependencies": {
 		"@rollup/plugin-node-resolve": "^16.0.0",
-		"rollup": "^4.34.9",
-		"@rollup/plugin-terser": "latest"
+		"@rollup/plugin-terser": "latest",
+		"rollup": "^4.34.9"
 	},
 	"scripts": {
 		"build": "rollup -c",
